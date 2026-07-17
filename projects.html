@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects — Jade Group</title>
+  <meta name="description" content="The complete Jade Group portfolio — office buildings, commercial centres, residences and land developments across Mauritius since 1976.">
+
+  <script>document.documentElement.classList.add("js");</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css?v=20260718-2">
+  <link rel="icon" href="img/favicon.svg?v=20260717-2" type="image/svg+xml">
+</head>
+<body id="top">
+
+  <header class="nav">
+    <a class="nav__brand" href="index.html" aria-label="Jade Group — home">
+      <img class="nav__logo nav__logo--light" src="img/brand/jade-group-white.png" alt="">
+      <img class="nav__logo nav__logo--dark" src="img/brand/jade-group-dark.png" alt="Jade Group">
+    </a>
+    <nav class="nav__links" aria-label="Main">
+      <a href="index.html">Index,</a>
+      <a href="index.html#legacy">Legacy,</a>
+      <a href="index.html#people">People,</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="plist">
+    <header class="plist__head">
+      <p class="eyebrow reveal">The portfolio</p>
+      <h1 class="reveal">All<br>Projects</h1>
+      <p class="plist__note serif reveal">Thirty developments across four sectors —<br>1976 to today.</p>
+    </header>
+
+    <div id="plist-groups"><!-- populated by script below --></div>
+  </main>
+
+  <footer class="footer">
+    <img class="footer__logo" src="img/brand/jade-group-white.png" alt="Jade Group">
+    <div class="footer__row">
+      <p>© 2026 Jade Group. All rights reserved.</p>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script src="js/projects-data.js"></script>
+  <script>
+    (function () {
+      var ORDER = ["Offices", "Commercial", "Residential", "Land Parceling", "Upcoming"];
+      var root = document.getElementById("plist-groups");
+
+      ORDER.forEach(function (cat) {
+        var items = window.JADE_PROJECTS.filter(function (p) { return p.category === cat; });
+        if (!items.length) return;
+
+        var section = document.createElement("section");
+        section.className = "plist__group";
+
+        var head = document.createElement("h2");
+        head.className = "plist__cat reveal";
+        head.innerHTML = cat + ' <span class="plist__count">' + items.length + "</span>";
+        section.appendChild(head);
+
+        items.forEach(function (p) {
+          var a = document.createElement("a");
+          a.className = "plist__row reveal";
+          a.href = "project.html?p=" + p.slug;
+          var meta = [p.location, p.floors].filter(Boolean).join(" · ");
+          a.innerHTML =
+            '<span class="plist__name">' + p.name + "</span>" +
+            '<span class="plist__meta serif">' + (meta || "—") + "</span>" +
+            '<span class="plist__arrow" aria-hidden="true">↗</span>';
+          section.appendChild(a);
+        });
+
+        root.appendChild(section);
+      });
+    })();
+  </script>
+  <script src="js/main.js?v=20260718-2"></script>
+</body>
+</html>

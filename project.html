@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project — Jade Group</title>
+  <meta name="description" content="A Jade Group development in Mauritius.">
+
+  <script>document.documentElement.classList.add("js");</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css?v=20260718-2">
+  <link rel="icon" href="img/favicon.svg?v=20260717-2" type="image/svg+xml">
+</head>
+<body id="top">
+
+  <header class="nav">
+    <a class="nav__brand" href="index.html" aria-label="Jade Group — home">
+      <img class="nav__logo nav__logo--light" src="img/brand/jade-group-white.png" alt="">
+      <img class="nav__logo nav__logo--dark" src="img/brand/jade-group-dark.png" alt="Jade Group">
+    </a>
+    <nav class="nav__links" aria-label="Main">
+      <a href="index.html">Index,</a>
+      <a href="projects.html">Projects,</a>
+      <a href="index.html#people">People,</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="pdetail">
+    <header class="pdetail__head">
+      <p class="pdetail__crumb reveal"><a href="projects.html">← All projects</a></p>
+      <p class="eyebrow reveal" id="p-cat"></p>
+      <h1 class="reveal" id="p-name"></h1>
+    </header>
+
+    <section class="pdetail__body">
+      <div class="pdetail__meta reveal">
+        <dl>
+          <div id="p-location-row"><dt>Location</dt><dd id="p-location"></dd></div>
+          <div id="p-floors-row"><dt>Scale</dt><dd id="p-floors"></dd></div>
+          <div><dt>Sector</dt><dd id="p-sector"></dd></div>
+          <div><dt>Enquiries</dt><dd>Charles Li<br><a href="mailto:charles.li@jadegroup.mu">charles.li@jadegroup.mu</a></dd></div>
+        </dl>
+      </div>
+      <div class="pdetail__text">
+        <p class="pdetail__lead serif reveal" id="p-lead"></p>
+        <p class="pdetail__desc reveal" id="p-body"></p>
+        <div class="pdetail__features reveal" id="p-features-wrap">
+          <h2>Features</h2>
+          <ul id="p-features"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="pdetail__gallery" id="p-gallery">
+      <figure class="placeholder reveal" id="p-photo-1"><span class="placeholder__label"></span></figure>
+      <figure class="placeholder reveal" id="p-photo-2"><span class="placeholder__label"></span></figure>
+    </section>
+
+    <nav class="pdetail__next reveal" aria-label="Next project">
+      <p class="eyebrow">Next project</p>
+      <a id="p-next" href="#"><span class="serif" id="p-next-name"></span> <span aria-hidden="true">→</span></a>
+    </nav>
+  </main>
+
+  <footer class="footer">
+    <img class="footer__logo" src="img/brand/jade-group-white.png" alt="Jade Group">
+    <div class="footer__row">
+      <p>© 2026 Jade Group. All rights reserved.</p>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script src="js/projects-data.js"></script>
+  <script>
+    (function () {
+      var slug = new URLSearchParams(window.location.search).get("p");
+      var all = window.JADE_PROJECTS;
+      var i = all.findIndex(function (p) { return p.slug === slug; });
+      if (i === -1) { window.location.replace("projects.html"); return; }
+      var p = all[i];
+
+      document.title = p.name + " — Jade Group";
+      document.querySelector('meta[name="description"]').content =
+        p.name + " — " + p.blurb + " A Jade Group development in Mauritius.";
+
+      var $ = function (id) { return document.getElementById(id); };
+      $("p-cat").textContent = p.category;
+      $("p-name").textContent = p.name;
+      $("p-sector").textContent = p.category;
+      $("p-lead").textContent = p.blurb;
+
+      if (p.location) { $("p-location").textContent = p.location; }
+      else { $("p-location-row").remove(); }
+
+      if (p.floors) { $("p-floors").textContent = p.floors; }
+      else { $("p-floors-row").remove(); }
+
+      if (p.body && p.body !== p.blurb) { $("p-body").textContent = p.body; }
+      else { $("p-body").remove(); }
+
+      if (p.features && p.features.length) {
+        var ul = $("p-features");
+        p.features.forEach(function (f) {
+          var li = document.createElement("li");
+          li.textContent = f;
+          ul.appendChild(li);
+        });
+      } else { $("p-features-wrap").remove(); }
+
+      var photoIds = ["p-photo-1", "p-photo-2"];
+      if (p.images && p.images.length) {
+        photoIds.forEach(function (id, n) {
+          var fig = $(id);
+          if (!p.images[n]) { fig.remove(); return; }
+
+          var img = document.createElement("img");
+          img.src = p.images[n];
+          img.alt = (p.category === "Upcoming" ? "Architectural render of " : "Photograph of ") + p.name;
+          img.loading = "lazy";
+          img.decoding = "async";
+
+          var caption = document.createElement("figcaption");
+          caption.className = "photo__label";
+          caption.textContent = (p.category === "Upcoming" ? "Architectural render — " : "Photograph — ") + p.name;
+
+          fig.className = "project-photo reveal";
+          fig.removeAttribute("data-photo");
+          fig.replaceChildren(img, caption);
+        });
+        if (p.images.length === 1) $("p-gallery").classList.add("pdetail__gallery--single");
+      } else {
+        photoIds.forEach(function (id, n) {
+          var fig = $(id);
+          fig.dataset.photo = p.name;
+          fig.querySelector(".placeholder__label").textContent =
+            "Photograph — " + p.name + " (" + (n + 1) + ")";
+        });
+      }
+
+      var next = all[(i + 1) % all.length];
+      $("p-next").href = "project.html?p=" + next.slug;
+      $("p-next-name").textContent = next.name;
+    })();
+  </script>
+  <script src="js/main.js?v=20260718-2"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Jade Group emblem">
+  <defs>
+    <radialGradient id="jade" cx="38%" cy="28%" r="76%">
+      <stop offset="0" stop-color="#21804d"/>
+      <stop offset="0.58" stop-color="#146b3d"/>
+      <stop offset="1" stop-color="#0c542f"/>
+    </radialGradient>
+    <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.28" stop-color="#c8cbca"/>
+      <stop offset="0.55" stop-color="#f7f7f7"/>
+      <stop offset="1" stop-color="#8c908f"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#000000" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <circle cx="64" cy="61" r="54" fill="url(#jade)" stroke="url(#silver)" stroke-width="6"/>
+    <rect x="50" y="47" width="28" height="28" fill="#ffffff" stroke="url(#silver)" stroke-width="6"/>
+  </g>
+</svg>
