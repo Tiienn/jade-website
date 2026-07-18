@@ -213,7 +213,7 @@ a:focus-visible {
 .hero__media > .hero__image {
   z-index: 0;
   object-fit: cover;
-  object-position: center bottom;
+  object-position: center top;
   opacity: 1;
   transition: opacity 0.9s var(--ease);
 }

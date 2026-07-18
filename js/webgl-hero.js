@@ -43,7 +43,7 @@
     "  float imageAspect = u_imageResolution.x / u_imageResolution.y;",
     "  if (screenAspect > imageAspect) {",
     "    float visibleHeight = imageAspect / screenAspect;",
-    "    uv.y = uv.y * visibleHeight;",
+    "    uv.y = 1.0 - visibleHeight + uv.y * visibleHeight;",
     "  } else {",
     "    uv.x = (uv.x - 0.5) * (screenAspect / imageAspect) + 0.5;",
     "  }",
@@ -197,7 +197,7 @@
     var drawnWidth = image.naturalWidth * scale;
     var drawnHeight = image.naturalHeight * scale;
     var offsetX = (rect.width - drawnWidth) * 0.5;
-    var offsetY = rect.height - drawnHeight;
+    var offsetY = 0;
     var localX = event.clientX - rect.left;
     var localY = event.clientY - rect.top;
 
@@ -216,7 +216,7 @@
     var drawnWidth = image.naturalWidth * scale;
     var drawnHeight = image.naturalHeight * scale;
     var offsetX = (rect.width - drawnWidth) * 0.5;
-    var offsetY = rect.height - drawnHeight;
+    var offsetY = 0;
     var localX = offsetX + sourceX * drawnWidth;
     var localY = offsetY + sourceY * drawnHeight;
 
@@ -232,17 +232,17 @@
     var point = imagePoint(event);
     var overBarclays =
       point.sourceX >= 0.013 && point.sourceX <= 0.281 &&
-      point.sourceY >= 0.342 && point.sourceY <= 0.649;
+      point.sourceY >= 0.429 && point.sourceY <= 0.814;
     var overAlexander =
       point.sourceX >= 0.725 && point.sourceX <= 0.924 &&
-      point.sourceY >= 0.377 && point.sourceY <= 0.517;
+      point.sourceY >= 0.473 && point.sourceY <= 0.649;
     var focus = null;
 
     if (overBarclays) {
-      focus = sourceToScreen(0.147, 0.496);
+      focus = sourceToScreen(0.147, 0.622);
       media.dataset.buildingHover = "barclays";
     } else if (overAlexander) {
-      focus = sourceToScreen(0.825, 0.447);
+      focus = sourceToScreen(0.825, 0.561);
       media.dataset.buildingHover = "alexander";
     } else {
       delete media.dataset.buildingHover;
