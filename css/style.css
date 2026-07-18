@@ -228,7 +228,6 @@ a:focus-visible {
   pointer-events: none;
   transition: opacity 0.9s var(--ease);
 }
-.hero__media.is-webgl > .hero__image { opacity: 0; }
 .hero__media.is-webgl .hero__webgl { opacity: 1; }
 .hero__inner {
   padding: 0 var(--gutter);

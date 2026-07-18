@@ -13,9 +13,10 @@
   if (!canvas || !image || reduceMotion) return;
 
   var gl = canvas.getContext("webgl", {
-    alpha: false,
+    alpha: true,
     antialias: false,
     depth: false,
+    premultipliedAlpha: false,
     powerPreference: "high-performance"
   });
   if (!gl) return;
@@ -60,7 +61,7 @@
     "  uv = clamp(uv, vec2(0.002), vec2(0.998));",
     "  vec3 color = texture2D(u_image, uv).rgb;",
     "  color *= 1.0 + strength * 0.015;",
-    "  gl_FragColor = vec4(color, 1.0);",
+    "  gl_FragColor = vec4(color, strength);",
     "}"
   ].join("\n");
 
@@ -158,7 +159,15 @@
       ready = true;
       media.classList.add("is-webgl");
     }
-    raf = window.requestAnimationFrame(draw);
+    if (
+      hoverTarget > 0 || hover > 0.002 ||
+      Math.abs(pointerTarget.x - pointer.x) > 0.0005 ||
+      Math.abs(pointerTarget.y - pointer.y) > 0.0005
+    ) {
+      raf = window.requestAnimationFrame(draw);
+    } else {
+      hover = 0;
+    }
   }
 
   function prepareTexture() {
@@ -246,11 +255,13 @@
     } else {
       hoverTarget = 0;
     }
+    requestFrame();
   }, { passive: true });
 
   hero.addEventListener("pointerleave", function () {
     hoverTarget = 0;
     delete media.dataset.buildingHover;
+    requestFrame();
   }, { passive: true });
 
   window.addEventListener("resize", resize, { passive: true });
