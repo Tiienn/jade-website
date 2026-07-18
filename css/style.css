@@ -212,7 +212,7 @@ a:focus-visible {
 }
 .hero__media > img {
   z-index: 0;
-  object-position: center 58%;
+  object-position: center bottom;
   opacity: 1;
   transition: opacity 0.9s var(--ease);
 }
@@ -283,7 +283,7 @@ a:focus-visible {
   text-align: center;
 }
 .motto__title {
-  font-size: clamp(3.4rem, 12vw, 12rem);
+  font-size: clamp(3.25rem, 8.5vw, 8.75rem);
   line-height: 0.95;
   font-weight: 500;
   letter-spacing: -0.04em;
@@ -297,13 +297,18 @@ a:focus-visible {
 }
 .motto__cols {
   margin: 4.5rem auto 0;
-  max-width: 56rem;
+  max-width: 64rem;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-  gap: 2.5rem;
+  gap: clamp(4rem, 7vw, 7rem);
   text-align: left;
-  font-size: 0.9rem;
-  color: var(--grey);
+  font-size: 1.18rem;
+  line-height: 1.65;
+  color: var(--ink);
+}
+.motto__lead {
+  font-size: 1.18rem;
+  color: var(--ink);
 }
 
 /* ============================================================
@@ -1057,6 +1062,11 @@ a:focus-visible {
 }
 
 @media (max-width: 700px) {
+  .motto__cols {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
   .legacy-visual {
     height: 82svh;
     min-height: 32rem;

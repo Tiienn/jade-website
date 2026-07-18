@@ -1,10 +1,11 @@
-/* Jade Group — lightweight WebGL hero lens (no dependencies) */
+/* Jade Group — localized WebGL highlights for Barclays and Alexander House */
 
 (function () {
   "use strict";
 
+  var hero = document.querySelector(".hero");
   var media = document.querySelector(".hero__media");
-  if (!media) return;
+  if (!hero || !media) return;
 
   var canvas = media.querySelector(".hero__webgl");
   var image = media.querySelector("img");
@@ -34,17 +35,14 @@
     "uniform vec2 u_resolution;",
     "uniform vec2 u_imageResolution;",
     "uniform vec2 u_pointer;",
-    "uniform float u_time;",
-    "uniform float u_velocity;",
+    "uniform float u_hover;",
     "varying vec2 v_uv;",
-    "float noise(vec2 p) {",
-    "  return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);",
-    "}",
     "vec2 coverUv(vec2 uv) {",
     "  float screenAspect = u_resolution.x / u_resolution.y;",
     "  float imageAspect = u_imageResolution.x / u_imageResolution.y;",
     "  if (screenAspect > imageAspect) {",
-    "    uv.y = (uv.y - 0.5) * (imageAspect / screenAspect) + 0.5;",
+    "    float visibleHeight = imageAspect / screenAspect;",
+    "    uv.y = uv.y * visibleHeight;",
     "  } else {",
     "    uv.x = (uv.x - 0.5) * (screenAspect / imageAspect) + 0.5;",
     "  }",
@@ -52,24 +50,16 @@
     "}",
     "void main() {",
     "  vec2 uv = coverUv(v_uv);",
+    "  vec2 focusUv = coverUv(u_pointer);",
     "  vec2 lensVector = v_uv - u_pointer;",
-    "  float lensDistance = length(lensVector);",
-    "  float lens = 1.0 - smoothstep(0.04, 0.48, lensDistance);",
-    "  uv -= lensVector * lens * 0.016;",
-    "  float pulse = sin(u_time * 0.34 + v_uv.y * 5.0) * 0.00075;",
-    "  uv.x += pulse + sin(v_uv.y * 17.0 + u_time * 0.42) * abs(u_velocity) * 0.0024;",
-    "  uv.y += u_velocity * (v_uv.y - 0.5) * 0.018;",
+    "  float aspect = u_resolution.x / u_resolution.y;",
+    "  float lensDistance = length(vec2(lensVector.x * aspect, lensVector.y));",
+    "  float lens = 1.0 - smoothstep(0.055, 0.245, lensDistance);",
+    "  float strength = lens * u_hover;",
+    "  uv -= (uv - focusUv) * strength * 0.052;",
     "  uv = clamp(uv, vec2(0.002), vec2(0.998));",
-    "  vec2 split = vec2(u_velocity * 0.0018 + (u_pointer.x - 0.5) * 0.0009, 0.0);",
-    "  float red = texture2D(u_image, clamp(uv + split, vec2(0.002), vec2(0.998))).r;",
-    "  float green = texture2D(u_image, uv).g;",
-    "  float blue = texture2D(u_image, clamp(uv - split, vec2(0.002), vec2(0.998))).b;",
-    "  vec3 color = vec3(red, green, blue);",
-    "  float jadeGlow = lens * 0.025;",
-    "  color += vec3(0.0, jadeGlow, jadeGlow * 0.42);",
-    "  float vignette = 1.0 - smoothstep(0.22, 0.82, distance(v_uv, vec2(0.5)));",
-    "  color *= 0.88 + vignette * 0.12;",
-    "  color += (noise(gl_FragCoord.xy + u_time * 37.0) - 0.5) * 0.016;",
+    "  vec3 color = texture2D(u_image, uv).rgb;",
+    "  color *= 1.0 + strength * 0.015;",
     "  gl_FragColor = vec4(color, 1.0);",
     "}"
   ].join("\n");
@@ -113,8 +103,7 @@
     resolution: gl.getUniformLocation(program, "u_resolution"),
     imageResolution: gl.getUniformLocation(program, "u_imageResolution"),
     pointer: gl.getUniformLocation(program, "u_pointer"),
-    time: gl.getUniformLocation(program, "u_time"),
-    velocity: gl.getUniformLocation(program, "u_velocity")
+    hover: gl.getUniformLocation(program, "u_hover")
   };
 
   var texture = gl.createTexture();
@@ -126,12 +115,10 @@
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
   gl.uniform1i(uniforms.image, 0);
 
-  var pointer = { x: 0.5, y: 0.5 };
-  var pointerTarget = { x: 0.5, y: 0.5 };
-  var velocity = 0;
-  var velocityTarget = 0;
-  var lastScrollY = window.scrollY;
-  var startedAt = window.performance.now();
+  var pointer = { x: 0.13, y: 0.42 };
+  var pointerTarget = { x: 0.13, y: 0.42 };
+  var hover = 0;
+  var hoverTarget = 0;
   var raf = 0;
   var visible = true;
   var ready = false;
@@ -152,21 +139,19 @@
     if (!raf && visible && !document.hidden) raf = window.requestAnimationFrame(draw);
   }
 
-  function draw(now) {
+  function draw() {
     raf = 0;
     if (!visible || document.hidden) return;
 
     resize();
-    pointer.x += (pointerTarget.x - pointer.x) * 0.055;
-    pointer.y += (pointerTarget.y - pointer.y) * 0.055;
-    velocity += (velocityTarget - velocity) * 0.12;
-    velocityTarget *= 0.9;
+    pointer.x += (pointerTarget.x - pointer.x) * 0.14;
+    pointer.y += (pointerTarget.y - pointer.y) * 0.14;
+    hover += (hoverTarget - hover) * 0.13;
 
     gl.uniform2f(uniforms.resolution, canvas.width, canvas.height);
     gl.uniform2f(uniforms.imageResolution, image.naturalWidth, image.naturalHeight);
     gl.uniform2f(uniforms.pointer, pointer.x, pointer.y);
-    gl.uniform1f(uniforms.time, (now - startedAt) / 1000);
-    gl.uniform1f(uniforms.velocity, velocity);
+    gl.uniform1f(uniforms.hover, hover);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
     if (!ready) {
@@ -189,21 +174,78 @@
     requestFrame();
   }
 
-  media.addEventListener("pointermove", function (event) {
+  function imagePoint(event) {
     var rect = media.getBoundingClientRect();
-    pointerTarget.x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-    pointerTarget.y = 1 - Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
+    var scale = Math.max(
+      rect.width / image.naturalWidth,
+      rect.height / image.naturalHeight
+    );
+    var drawnWidth = image.naturalWidth * scale;
+    var drawnHeight = image.naturalHeight * scale;
+    var offsetX = (rect.width - drawnWidth) * 0.5;
+    var offsetY = rect.height - drawnHeight;
+    var localX = event.clientX - rect.left;
+    var localY = event.clientY - rect.top;
+
+    return {
+      sourceX: (localX - offsetX) / drawnWidth,
+      sourceY: (localY - offsetY) / drawnHeight
+    };
+  }
+
+  function sourceToScreen(sourceX, sourceY) {
+    var rect = media.getBoundingClientRect();
+    var scale = Math.max(
+      rect.width / image.naturalWidth,
+      rect.height / image.naturalHeight
+    );
+    var drawnWidth = image.naturalWidth * scale;
+    var drawnHeight = image.naturalHeight * scale;
+    var offsetX = (rect.width - drawnWidth) * 0.5;
+    var offsetY = rect.height - drawnHeight;
+    var localX = offsetX + sourceX * drawnWidth;
+    var localY = offsetY + sourceY * drawnHeight;
+
+    return {
+      x: Math.max(0, Math.min(1, localX / rect.width)),
+      y: 1 - Math.max(0, Math.min(1, localY / rect.height))
+    };
+  }
+
+  hero.addEventListener("pointermove", function (event) {
+    if (event.pointerType === "touch") return;
+
+    var point = imagePoint(event);
+    var overBarclays =
+      point.sourceX >= 0.013 && point.sourceX <= 0.281 &&
+      point.sourceY >= 0.272 && point.sourceY <= 0.658;
+    var overAlexander =
+      point.sourceX >= 0.725 && point.sourceX <= 0.924 &&
+      point.sourceY >= 0.316 && point.sourceY <= 0.492;
+    var focus = null;
+
+    if (overBarclays) {
+      focus = sourceToScreen(0.147, 0.465);
+      media.dataset.buildingHover = "barclays";
+    } else if (overAlexander) {
+      focus = sourceToScreen(0.825, 0.404);
+      media.dataset.buildingHover = "alexander";
+    } else {
+      delete media.dataset.buildingHover;
+    }
+
+    if (focus) {
+      pointerTarget.x = focus.x;
+      pointerTarget.y = focus.y;
+      hoverTarget = 1;
+    } else {
+      hoverTarget = 0;
+    }
   }, { passive: true });
 
-  media.addEventListener("pointerleave", function () {
-    pointerTarget.x = 0.5;
-    pointerTarget.y = 0.5;
-  }, { passive: true });
-
-  window.addEventListener("scroll", function () {
-    var nextScrollY = window.scrollY;
-    velocityTarget = Math.max(-1, Math.min(1, (nextScrollY - lastScrollY) / 80));
-    lastScrollY = nextScrollY;
+  hero.addEventListener("pointerleave", function () {
+    hoverTarget = 0;
+    delete media.dataset.buildingHover;
   }, { passive: true });
 
   window.addEventListener("resize", resize, { passive: true });
