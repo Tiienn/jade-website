@@ -208,31 +208,22 @@ a:focus-visible {
     rgba(10, 10, 9, 0.38) 42%,
     transparent 68%
   );
-  z-index: 4;
-}
-.hero__media > .hero__backdrop {
-  z-index: 0;
-  object-fit: cover;
-  object-position: center;
-  filter: blur(24px) saturate(0.82) brightness(0.62);
-  transform: scale(1.06);
-  opacity: 0.78;
+  z-index: 3;
 }
 .hero__media > .hero__image {
-  z-index: 1;
-  object-fit: contain;
-  object-position: center;
+  z-index: 0;
+  object-fit: cover;
+  object-position: center bottom;
   opacity: 1;
   transition: opacity 0.9s var(--ease);
 }
-.hero__media::after { z-index: 3; }
 .hero__webgl {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   display: block;
-  z-index: 2;
+  z-index: 1;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.9s var(--ease);

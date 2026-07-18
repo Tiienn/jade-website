@@ -13,7 +13,7 @@
   if (!canvas || !image || reduceMotion) return;
 
   var gl = canvas.getContext("webgl", {
-    alpha: true,
+    alpha: false,
     antialias: false,
     depth: false,
     powerPreference: "high-performance"
@@ -37,38 +37,20 @@
     "uniform vec2 u_pointer;",
     "uniform float u_hover;",
     "varying vec2 v_uv;",
-    "float containMask(vec2 uv) {",
+    "vec2 coverUv(vec2 uv) {",
     "  float screenAspect = u_resolution.x / u_resolution.y;",
     "  float imageAspect = u_imageResolution.x / u_imageResolution.y;",
     "  if (screenAspect > imageAspect) {",
-    "    float visibleWidth = imageAspect / screenAspect;",
-    "    float edge = (1.0 - visibleWidth) * 0.5;",
-    "    return step(edge, uv.x) * step(uv.x, 1.0 - edge);",
+    "    float visibleHeight = imageAspect / screenAspect;",
+    "    uv.y = uv.y * visibleHeight;",
     "  } else {",
-    "    float visibleHeight = screenAspect / imageAspect;",
-    "    float edge = (1.0 - visibleHeight) * 0.5;",
-    "    return step(edge, uv.y) * step(uv.y, 1.0 - edge);",
-    "  }",
-    "}",
-    "vec2 containUv(vec2 uv) {",
-    "  float screenAspect = u_resolution.x / u_resolution.y;",
-    "  float imageAspect = u_imageResolution.x / u_imageResolution.y;",
-    "  if (screenAspect > imageAspect) {",
-    "    float visibleWidth = imageAspect / screenAspect;",
-    "    uv.x = (uv.x - (1.0 - visibleWidth) * 0.5) / visibleWidth;",
-    "  } else {",
-    "    float visibleHeight = screenAspect / imageAspect;",
-    "    uv.y = (uv.y - (1.0 - visibleHeight) * 0.5) / visibleHeight;",
+    "    uv.x = (uv.x - 0.5) * (screenAspect / imageAspect) + 0.5;",
     "  }",
     "  return uv;",
     "}",
     "void main() {",
-    "  if (containMask(v_uv) < 0.5) {",
-    "    gl_FragColor = vec4(0.0);",
-    "    return;",
-    "  }",
-    "  vec2 uv = containUv(v_uv);",
-    "  vec2 focusUv = containUv(u_pointer);",
+    "  vec2 uv = coverUv(v_uv);",
+    "  vec2 focusUv = coverUv(u_pointer);",
     "  vec2 lensVector = v_uv - u_pointer;",
     "  float aspect = u_resolution.x / u_resolution.y;",
     "  float lensDistance = length(vec2(lensVector.x * aspect, lensVector.y));",
@@ -194,14 +176,14 @@
 
   function imagePoint(event) {
     var rect = media.getBoundingClientRect();
-    var scale = Math.min(
+    var scale = Math.max(
       rect.width / image.naturalWidth,
       rect.height / image.naturalHeight
     );
     var drawnWidth = image.naturalWidth * scale;
     var drawnHeight = image.naturalHeight * scale;
     var offsetX = (rect.width - drawnWidth) * 0.5;
-    var offsetY = (rect.height - drawnHeight) * 0.5;
+    var offsetY = rect.height - drawnHeight;
     var localX = event.clientX - rect.left;
     var localY = event.clientY - rect.top;
 
@@ -213,14 +195,14 @@
 
   function sourceToScreen(sourceX, sourceY) {
     var rect = media.getBoundingClientRect();
-    var scale = Math.min(
+    var scale = Math.max(
       rect.width / image.naturalWidth,
       rect.height / image.naturalHeight
     );
     var drawnWidth = image.naturalWidth * scale;
     var drawnHeight = image.naturalHeight * scale;
     var offsetX = (rect.width - drawnWidth) * 0.5;
-    var offsetY = (rect.height - drawnHeight) * 0.5;
+    var offsetY = rect.height - drawnHeight;
     var localX = offsetX + sourceX * drawnWidth;
     var localY = offsetY + sourceY * drawnHeight;
 
@@ -236,17 +218,17 @@
     var point = imagePoint(event);
     var overBarclays =
       point.sourceX >= 0.013 && point.sourceX <= 0.281 &&
-      point.sourceY >= 0.272 && point.sourceY <= 0.658;
+      point.sourceY >= 0.342 && point.sourceY <= 0.649;
     var overAlexander =
       point.sourceX >= 0.725 && point.sourceX <= 0.924 &&
-      point.sourceY >= 0.316 && point.sourceY <= 0.492;
+      point.sourceY >= 0.377 && point.sourceY <= 0.517;
     var focus = null;
 
     if (overBarclays) {
-      focus = sourceToScreen(0.147, 0.465);
+      focus = sourceToScreen(0.147, 0.496);
       media.dataset.buildingHover = "barclays";
     } else if (overAlexander) {
-      focus = sourceToScreen(0.825, 0.404);
+      focus = sourceToScreen(0.825, 0.447);
       media.dataset.buildingHover = "alexander";
     } else {
       delete media.dataset.buildingHover;
