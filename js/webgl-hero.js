@@ -164,8 +164,13 @@
   function prepareTexture() {
     if (!image.naturalWidth || !image.naturalHeight) return;
     try {
+      for (var errorCount = 0; errorCount < 4 && gl.getError() !== gl.NO_ERROR; errorCount += 1) {}
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+      if (gl.getError() !== gl.NO_ERROR) {
+        canvas.dataset.webgl = "texture-unavailable";
+        return;
+      }
     } catch (error) {
       canvas.dataset.webgl = "image-unavailable";
       return;
@@ -265,6 +270,14 @@
     raf = 0;
   });
 
-  if (image.complete) prepareTexture();
-  else image.addEventListener("load", prepareTexture, { once: true });
+  function decodeAndPrepareTexture() {
+    if (typeof image.decode === "function") {
+      image.decode().then(prepareTexture, prepareTexture);
+    } else {
+      prepareTexture();
+    }
+  }
+
+  if (image.complete) decodeAndPrepareTexture();
+  else image.addEventListener("load", decodeAndPrepareTexture, { once: true });
 })();
