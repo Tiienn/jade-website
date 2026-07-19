@@ -45,7 +45,7 @@
       var rect = hero.getBoundingClientRect();
       var travel = Math.max(1, rect.height - window.innerHeight);
       var progress = Math.max(0, Math.min(1, -rect.top / travel));
-      var copy = Math.max(0, Math.min(1, (progress - 0.12) / 0.38));
+      var copy = Math.max(0, Math.min(1, (progress - 0.08) / 0.62));
       var easedCopy = 1 - Math.pow(1 - copy, 3);
 
       hero.style.setProperty("--hero-pan", (progress * 100).toFixed(2) + "%");
