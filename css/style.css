@@ -184,11 +184,18 @@ a:focus-visible {
    ============================================================ */
 .hero {
   position: relative;
-  min-height: max(100svh, calc(100vw * 0.531333));
+  height: 190svh;
+  min-height: 0;
+  color: var(--dark-ink);
+}
+.hero__sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  color: var(--dark-ink);
+  overflow: hidden;
   isolation: isolate;
 }
 .hero__media {
@@ -213,9 +220,9 @@ a:focus-visible {
 .hero__media > .hero__image {
   z-index: 0;
   object-fit: cover;
-  object-position: center top;
+  object-position: center var(--hero-pan, 0%);
   opacity: 1;
-  transition: opacity 0.9s var(--ease);
+  transition: opacity 0.9s var(--ease), object-position 0.08s linear;
 }
 .hero__webgl {
   position: absolute;
@@ -232,6 +239,9 @@ a:focus-visible {
 .hero__inner {
   padding: 0 var(--gutter);
   margin-bottom: 3rem;
+  opacity: var(--hero-copy, 0);
+  transform: translate3d(0, var(--hero-copy-y, 2rem), 0);
+  will-change: opacity, transform;
 }
 .hero__eyebrow {
   width: max-content;
@@ -272,17 +282,9 @@ a:focus-visible {
   padding: 0 var(--gutter) 1.4rem;
   font-size: 0.8125rem;
   color: rgba(240, 239, 236, 0.7);
+  opacity: var(--hero-scroll, 1);
 }
 .hero__scroll { letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.7rem; }
-
-@media (min-width: 901px) and (min-aspect-ratio: 2 / 1) {
-  .hero__inner {
-    padding-left: 31vw;
-  }
-  .hero__title {
-    font-size: clamp(3.2rem, 8.5vw, 10rem);
-  }
-}
 
 /* ============================================================
    MOTTO — giant statement
@@ -1071,6 +1073,15 @@ a:focus-visible {
 }
 
 @media (max-width: 700px) {
+  .hero {
+    height: 100svh;
+  }
+  .hero__inner {
+    opacity: 1;
+    transform: none;
+  }
+  .hero__foot { opacity: 1; }
+
   .motto__cols {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -1133,6 +1144,7 @@ a:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hero { height: 100svh; }
   .hero__webgl { display: none; }
   .hero__media > .hero__image { opacity: 1; }
   .gallery .project-photo img {

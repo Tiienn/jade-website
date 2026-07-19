@@ -34,6 +34,41 @@
     updateNavTheme();
   }
 
+  /* ---------- pinned hero: image pan + copy reveal ---------- */
+  var hero = document.querySelector(".hero");
+
+  if (hero && !reduceMotion && window.innerWidth > 700) {
+    var heroRaf = 0;
+
+    function updateHeroSequence() {
+      heroRaf = 0;
+      var rect = hero.getBoundingClientRect();
+      var travel = Math.max(1, rect.height - window.innerHeight);
+      var progress = Math.max(0, Math.min(1, -rect.top / travel));
+      var copy = Math.max(0, Math.min(1, (progress - 0.12) / 0.38));
+      var easedCopy = 1 - Math.pow(1 - copy, 3);
+
+      hero.style.setProperty("--hero-pan", (progress * 100).toFixed(2) + "%");
+      hero.style.setProperty("--hero-pan-progress", progress.toFixed(4));
+      hero.style.setProperty("--hero-copy", easedCopy.toFixed(4));
+      hero.style.setProperty("--hero-copy-y", ((1 - easedCopy) * 32).toFixed(2) + "px");
+      hero.style.setProperty("--hero-scroll", Math.max(0, 1 - progress * 4).toFixed(4));
+    }
+
+    function requestHeroSequence() {
+      if (!heroRaf) heroRaf = window.requestAnimationFrame(updateHeroSequence);
+    }
+
+    window.addEventListener("scroll", requestHeroSequence, { passive: true });
+    window.addEventListener("resize", requestHeroSequence, { passive: true });
+    updateHeroSequence();
+  } else if (hero) {
+    hero.style.setProperty("--hero-pan", "52%");
+    hero.style.setProperty("--hero-pan-progress", "0.52");
+    hero.style.setProperty("--hero-copy", "1");
+    hero.style.setProperty("--hero-copy-y", "0px");
+  }
+
   /* ---------- reliable back-to-top controls ---------- */
   document.querySelectorAll('a[href="#top"]').forEach(function (link) {
     link.addEventListener("click", function (event) {

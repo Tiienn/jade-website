@@ -37,13 +37,15 @@
     "uniform vec2 u_imageResolution;",
     "uniform vec2 u_pointer;",
     "uniform float u_hover;",
+    "uniform float u_pan;",
     "varying vec2 v_uv;",
     "vec2 coverUv(vec2 uv) {",
     "  float screenAspect = u_resolution.x / u_resolution.y;",
     "  float imageAspect = u_imageResolution.x / u_imageResolution.y;",
     "  if (screenAspect > imageAspect) {",
     "    float visibleHeight = imageAspect / screenAspect;",
-    "    uv.y = 1.0 - visibleHeight + uv.y * visibleHeight;",
+    "    float start = (1.0 - visibleHeight) * (1.0 - u_pan);",
+    "    uv.y = start + uv.y * visibleHeight;",
     "  } else {",
     "    uv.x = (uv.x - 0.5) * (screenAspect / imageAspect) + 0.5;",
     "  }",
@@ -104,7 +106,8 @@
     resolution: gl.getUniformLocation(program, "u_resolution"),
     imageResolution: gl.getUniformLocation(program, "u_imageResolution"),
     pointer: gl.getUniformLocation(program, "u_pointer"),
-    hover: gl.getUniformLocation(program, "u_hover")
+    hover: gl.getUniformLocation(program, "u_hover"),
+    pan: gl.getUniformLocation(program, "u_pan")
   };
 
   var texture = gl.createTexture();
@@ -153,6 +156,7 @@
     gl.uniform2f(uniforms.imageResolution, image.naturalWidth, image.naturalHeight);
     gl.uniform2f(uniforms.pointer, pointer.x, pointer.y);
     gl.uniform1f(uniforms.hover, hover);
+    gl.uniform1f(uniforms.pan, heroPan());
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
     if (!ready) {
@@ -197,7 +201,7 @@
     var drawnWidth = image.naturalWidth * scale;
     var drawnHeight = image.naturalHeight * scale;
     var offsetX = (rect.width - drawnWidth) * 0.5;
-    var offsetY = 0;
+    var offsetY = -(drawnHeight - rect.height) * heroPan();
     var localX = event.clientX - rect.left;
     var localY = event.clientY - rect.top;
 
@@ -216,7 +220,7 @@
     var drawnWidth = image.naturalWidth * scale;
     var drawnHeight = image.naturalHeight * scale;
     var offsetX = (rect.width - drawnWidth) * 0.5;
-    var offsetY = 0;
+    var offsetY = -(drawnHeight - rect.height) * heroPan();
     var localX = offsetX + sourceX * drawnWidth;
     var localY = offsetY + sourceY * drawnHeight;
 
@@ -259,6 +263,19 @@
   }, { passive: true });
 
   hero.addEventListener("pointerleave", function () {
+    hoverTarget = 0;
+    delete media.dataset.buildingHover;
+    requestFrame();
+  }, { passive: true });
+
+  function heroPan() {
+    var value = parseFloat(
+      window.getComputedStyle(hero).getPropertyValue("--hero-pan-progress")
+    );
+    return Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : 0;
+  }
+
+  window.addEventListener("scroll", function () {
     hoverTarget = 0;
     delete media.dataset.buildingHover;
     requestFrame();
