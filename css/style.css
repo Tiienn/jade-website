@@ -287,8 +287,15 @@ a:focus-visible {
   padding: clamp(6rem, 16vh, 12rem) var(--gutter) clamp(5rem, 12vh, 9rem);
   text-align: center;
 }
+.motto__mark {
+  display: block;
+  width: min(72rem, 78vw);
+  height: auto;
+  margin: 0 auto clamp(3.5rem, 8vh, 6.5rem);
+  mix-blend-mode: multiply;
+}
 .motto__title {
-  font-size: clamp(3.25rem, 8.5vw, 8.75rem);
+  font-size: clamp(3rem, 6.25vw, 6.5rem);
   line-height: 0.95;
   font-weight: 500;
   letter-spacing: -0.04em;
