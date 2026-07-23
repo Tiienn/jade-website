@@ -207,13 +207,13 @@
     positionDepthPhotos();
   }
 
-  /* ---------- Alexander House scroll drift ---------- */
+  /* ---------- Alexander House: blueprint-to-built scroll sequence ---------- */
   var legacyVisual = document.querySelector(".legacy-visual");
-  var legacyVisualImage = legacyVisual
-    ? legacyVisual.querySelector("img")
-    : null;
+  var legacyVisualImages = legacyVisual
+    ? legacyVisual.querySelectorAll(".legacy-visual__image")
+    : [];
 
-  if (!reduceMotion && legacyVisual && legacyVisualImage) {
+  if (!reduceMotion && legacyVisual && legacyVisualImages.length) {
     var legacyRaf = 0;
 
     function positionLegacyVisual() {
@@ -222,10 +222,30 @@
       var rect = legacyVisual.getBoundingClientRect();
       if (rect.bottom < 0 || rect.top > viewportHeight) return;
 
-      var progress = (viewportHeight - rect.top) / (viewportHeight + rect.height);
-      var range = window.innerWidth <= 700 ? 40 : 64;
-      var shift = Math.max(-range / 2, Math.min(range / 2, (progress - 0.5) * range));
-      legacyVisualImage.style.setProperty("--legacy-shift", shift.toFixed(2) + "px");
+      var travel = Math.max(1, rect.height - viewportHeight);
+      var progress = Math.max(0, Math.min(1, -rect.top / travel));
+      var blueprintProgress = Math.max(0, Math.min(1, progress / 0.48));
+      var photoProgress = Math.max(0, Math.min(1, (progress - 0.42) / 0.58));
+      var range = window.innerWidth <= 700 ? 26 : 42;
+      var shift = (progress - 0.5) * range;
+
+      legacyVisual.style.setProperty(
+        "--blueprint-clip",
+        (100 - blueprintProgress * 100).toFixed(2) + "%"
+      );
+      legacyVisual.style.setProperty(
+        "--photo-clip",
+        (100 - photoProgress * 100).toFixed(2) + "%"
+      );
+      legacyVisual.style.setProperty(
+        "--drawing-line-left",
+        (blueprintProgress * 100).toFixed(2) + "%"
+      );
+      legacyVisual.style.setProperty(
+        "--drawing-line-opacity",
+        blueprintProgress > 0.01 && blueprintProgress < 0.995 ? "1" : "0"
+      );
+      legacyVisual.style.setProperty("--legacy-shift", shift.toFixed(2) + "px");
     }
 
     function requestLegacyPosition() {
