@@ -224,26 +224,21 @@
 
       var travel = Math.max(1, rect.height - viewportHeight);
       var progress = Math.max(0, Math.min(1, -rect.top / travel));
-      var blueprintProgress = Math.max(0, Math.min(1, progress / 0.48));
-      var photoProgress = Math.max(0, Math.min(1, (progress - 0.42) / 0.58));
+      var photoProgress = Math.max(0, Math.min(1, (progress - 0.16) / 0.7));
       var range = window.innerWidth <= 700 ? 26 : 42;
       var shift = (progress - 0.5) * range;
 
-      legacyVisual.style.setProperty(
-        "--blueprint-clip",
-        (100 - blueprintProgress * 100).toFixed(2) + "%"
-      );
       legacyVisual.style.setProperty(
         "--photo-clip",
         (100 - photoProgress * 100).toFixed(2) + "%"
       );
       legacyVisual.style.setProperty(
         "--drawing-line-left",
-        (blueprintProgress * 100).toFixed(2) + "%"
+        (photoProgress * 100).toFixed(2) + "%"
       );
       legacyVisual.style.setProperty(
         "--drawing-line-opacity",
-        blueprintProgress > 0.01 && blueprintProgress < 0.995 ? "1" : "0"
+        photoProgress > 0.01 && photoProgress < 0.995 ? "1" : "0"
       );
       legacyVisual.style.setProperty("--legacy-shift", shift.toFixed(2) + "px");
     }
