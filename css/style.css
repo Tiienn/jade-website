@@ -202,6 +202,9 @@ a:focus-visible {
   position: absolute; inset: 0;
   z-index: -1;
   overflow: hidden;
+  --daylight-x: 50%;
+  --daylight-y: 50%;
+  --daylight-radius: clamp(8rem, 15vw, 15rem);
 }
 .hero__media .placeholder__label,
 .hero__media .photo__label { left: auto; right: 1.1rem; top: 4.2rem; bottom: auto; }
@@ -229,6 +232,29 @@ a:focus-visible {
   pointer-events: none;
   will-change: object-position;
   transition: object-position 0.04s linear;
+}
+.hero__media > .hero__image--day {
+  z-index: 4;
+  opacity: 0;
+  -webkit-mask-image: radial-gradient(
+    circle var(--daylight-radius) at var(--daylight-x) var(--daylight-y),
+    #000 0%,
+    #000 56%,
+    rgba(0, 0, 0, 0.82) 68%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    circle var(--daylight-radius) at var(--daylight-x) var(--daylight-y),
+    #000 0%,
+    #000 56%,
+    rgba(0, 0, 0, 0.82) 68%,
+    transparent 100%
+  );
+  transition: opacity 180ms ease-out, object-position 0.04s linear;
+  will-change: opacity, object-position, -webkit-mask-image, mask-image;
+}
+.hero__sticky.is-daylight-active .hero__image--day {
+  opacity: 1;
 }
 .hero__inner {
   padding: 0 var(--gutter);
@@ -1082,6 +1108,7 @@ a:focus-visible {
     transform: none;
   }
   .hero__foot { opacity: 1; }
+  .hero__media > .hero__image--day { display: none; }
 
   .motto__cols {
     grid-template-columns: 1fr;
@@ -1147,6 +1174,7 @@ a:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .hero { height: 100svh; }
   .hero__media > .hero__image { opacity: 1; }
+  .hero__media > .hero__image--day { display: none; }
   .gallery .project-photo img {
     top: 0;
     height: 100%;

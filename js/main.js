@@ -69,6 +69,46 @@
     hero.style.setProperty("--hero-copy-y", "0px");
   }
 
+  /* ---------- cursor daylight reveal over the night hero ---------- */
+  var heroSticky = hero ? hero.querySelector(".hero__sticky") : null;
+  var heroMedia = hero ? hero.querySelector(".hero__media") : null;
+  var daylightImage = hero ? hero.querySelector(".hero__image--day") : null;
+  var canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  if (heroSticky && heroMedia && daylightImage && canHover && !reduceMotion) {
+    var daylightRaf = 0;
+    var daylightX = 0;
+    var daylightY = 0;
+
+    function positionDaylightReveal() {
+      daylightRaf = 0;
+      var rect = heroMedia.getBoundingClientRect();
+      var x = Math.max(0, Math.min(rect.width, daylightX - rect.left));
+      var y = Math.max(0, Math.min(rect.height, daylightY - rect.top));
+
+      heroMedia.style.setProperty("--daylight-x", x.toFixed(1) + "px");
+      heroMedia.style.setProperty("--daylight-y", y.toFixed(1) + "px");
+    }
+
+    heroSticky.addEventListener("pointerenter", function (event) {
+      daylightX = event.clientX;
+      daylightY = event.clientY;
+      heroSticky.classList.add("is-daylight-active");
+      positionDaylightReveal();
+    });
+
+    heroSticky.addEventListener("pointermove", function (event) {
+      daylightX = event.clientX;
+      daylightY = event.clientY;
+      heroSticky.classList.add("is-daylight-active");
+      if (!daylightRaf) daylightRaf = window.requestAnimationFrame(positionDaylightReveal);
+    });
+
+    heroSticky.addEventListener("pointerleave", function () {
+      heroSticky.classList.remove("is-daylight-active");
+    });
+  }
+
   /* ---------- reliable back-to-top controls ---------- */
   document.querySelectorAll('a[href="#top"]').forEach(function (link) {
     link.addEventListener("click", function (event) {
