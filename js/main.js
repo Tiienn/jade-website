@@ -52,7 +52,6 @@
       hero.style.setProperty("--hero-pan-progress", progress.toFixed(4));
       hero.style.setProperty("--hero-copy", easedCopy.toFixed(4));
       hero.style.setProperty("--hero-copy-y", ((1 - easedCopy) * 32).toFixed(2) + "px");
-      hero.style.setProperty("--hero-scroll", Math.max(0, 1 - progress * 4).toFixed(4));
     }
 
     function requestHeroSequence() {

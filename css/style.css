@@ -120,8 +120,7 @@ a:focus-visible {
   mix-blend-mode: overlay;
   pointer-events: none;
 }
-.placeholder__label,
-.photo__label {
+.placeholder__label {
   position: absolute;
   left: 1.1rem; bottom: 1rem;
   font-size: 0.6875rem;
@@ -207,8 +206,7 @@ a:focus-visible {
   --daylight-y: 50%;
   --daylight-radius: clamp(8rem, 15vw, 15rem);
 }
-.hero__media .placeholder__label,
-.hero__media .photo__label { left: auto; right: 1.1rem; top: 4.2rem; bottom: auto; }
+.hero__media .placeholder__label { left: auto; right: 1.1rem; top: 4.2rem; bottom: auto; }
 .hero__media::before {
   /* legibility scrim */
   content: "";
@@ -278,18 +276,6 @@ a:focus-visible {
   font-style: italic;
   letter-spacing: -0.01em;
 }
-.hero__foot {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-  gap: 1rem;
-  padding: 0 var(--gutter) 1.4rem;
-  font-size: 0.8125rem;
-  color: rgba(240, 239, 236, 0.7);
-  opacity: var(--hero-scroll, 1);
-}
-.hero__scroll { letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.7rem; }
-
 /* ============================================================
    MOTTO — giant statement
    ============================================================ */
@@ -1168,7 +1154,6 @@ a:focus-visible {
     opacity: 1;
     transform: none;
   }
-  .hero__foot { opacity: 1; }
   .hero__media > .hero__image--day { display: none; }
 
   .motto__cols {
@@ -1189,8 +1174,7 @@ a:focus-visible {
   .gallery__item { grid-column: 1 / -1 !important; margin-top: 0 !important; }
   .nav__links { font-size: 0.875rem; }
   /* the photo credit pill collides with the hero footer on small screens */
-  .hero__media .placeholder__label,
-  .hero__media .photo__label { display: none; }
+  .hero__media .placeholder__label { display: none; }
   .pdetail__gallery { grid-template-columns: 1fr; }
   .plist__row { grid-template-columns: 1fr auto; row-gap: 0.15rem; }
   .plist__meta { grid-column: 1 / -1; }
