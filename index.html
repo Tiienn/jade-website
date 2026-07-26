@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/style.css?v=20260724-2">
+  <link rel="stylesheet" href="css/style.css?v=20260726-1">
   <link rel="icon" href="img/favicon.svg?v=20260717-2" type="image/svg+xml">
 </head>
 <body id="top">
@@ -41,7 +41,6 @@
           <img class="hero__image hero__image--day" src="img/hero-ebene-day.jpg" alt="" aria-hidden="true" decoding="async">
         </figure>
         <div class="hero__inner">
-          <p class="hero__eyebrow">Property Development&nbsp;· Management&nbsp;· Investment</p>
           <h1 class="hero__title">
             <span class="hero__line">Building</span>
             <span class="hero__line hero__line--serif">quietly, well,</span>
@@ -56,7 +55,22 @@
 
     <!-- ============ MOTTO ============ -->
     <section class="motto" id="legacy">
-      <img class="motto__mark reveal" src="img/property-dim.png" alt="Property development, investment and management">
+      <div class="motto__marquee reveal" aria-label="Development, investment, management and real estate">
+        <div class="motto__marquee-track">
+          <div class="motto__marquee-set">
+            <span>Development</span><i aria-hidden="true">·</i>
+            <span>Investment</span><i aria-hidden="true">·</i>
+            <span>Management</span><i aria-hidden="true">·</i>
+            <span>Real Estate</span><i aria-hidden="true">·</i>
+          </div>
+          <div class="motto__marquee-set" aria-hidden="true">
+            <span>Development</span><i>·</i>
+            <span>Investment</span><i>·</i>
+            <span>Management</span><i>·</i>
+            <span>Real Estate</span><i>·</i>
+          </div>
+        </div>
+      </div>
       <h2 class="motto__title reveal">Small is<br>Beautiful</h2>
       <p class="motto__attr reveal">— E.F. Schumacher, 1973.</p>
       <div class="motto__cols">
@@ -93,7 +107,7 @@
           <div><dt>Focus</dt><dd>Office buildings, commercial centres, residences &amp; land parceling — development and management</dd></div>
         </dl>
       </div>
-      <p class="legacy__statement serif reveal">
+      <p class="legacy__statement serif reveal" data-scroll-highlight>
         Since 1976, <em class="legacy__brand">Jade Group</em> has helped shape the places where Mauritius
         works. Our roots are in office development — more than twenty
         buildings, including Raffles Tower, Barclays House and Alexander
@@ -385,6 +399,6 @@
   </footer>
 
   <script src="js/project-orbit.js?v=20260717-7"></script>
-  <script src="js/main.js?v=20260724-2"></script>
+  <script src="js/main.js?v=20260726-1"></script>
 </body>
 </html>

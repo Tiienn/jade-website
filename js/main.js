@@ -177,6 +177,70 @@
     revealEls.forEach(function (el) { revealObserver.observe(el); });
   }
 
+  /* ---------- scroll-reading highlight for the Jade story ---------- */
+  var legacyStatement = document.querySelector("[data-scroll-highlight]");
+  var legacyStory = legacyStatement ? legacyStatement.closest(".legacy") : null;
+
+  if (!reduceMotion && legacyStatement && legacyStory && window.innerWidth > 900) {
+    var textNodes = [];
+    var walker = document.createTreeWalker(
+      legacyStatement,
+      NodeFilter.SHOW_TEXT,
+      null
+    );
+    var textNode;
+
+    while ((textNode = walker.nextNode())) textNodes.push(textNode);
+
+    textNodes.forEach(function (node) {
+      var parts = node.nodeValue.split(/(\s+)/);
+      var fragment = document.createDocumentFragment();
+
+      parts.forEach(function (part) {
+        if (!part) return;
+        if (/^\s+$/.test(part)) {
+          fragment.appendChild(document.createTextNode(part));
+          return;
+        }
+
+        var word = document.createElement("span");
+        word.className = "legacy__word";
+        word.textContent = part;
+        fragment.appendChild(word);
+      });
+
+      node.parentNode.replaceChild(fragment, node);
+    });
+
+    var legacyWords = legacyStatement.querySelectorAll(".legacy__word");
+    var storyRaf = 0;
+
+    function updateStoryHighlight() {
+      storyRaf = 0;
+      var rect = legacyStory.getBoundingClientRect();
+      var travel = Math.max(1, rect.height - window.innerHeight);
+      var progress = Math.max(0, Math.min(1, -rect.top / travel));
+      var wordCount = legacyWords.length;
+
+      legacyWords.forEach(function (word, index) {
+        var local = Math.max(
+          0,
+          Math.min(1, (progress * (wordCount + 5) - index) / 5)
+        );
+        var opacity = 0.16 + local * 0.84;
+        word.style.setProperty("--word-opacity", opacity.toFixed(3));
+      });
+    }
+
+    function requestStoryHighlight() {
+      if (!storyRaf) storyRaf = window.requestAnimationFrame(updateStoryHighlight);
+    }
+
+    window.addEventListener("scroll", requestStoryHighlight, { passive: true });
+    window.addEventListener("resize", requestStoryHighlight, { passive: true });
+    updateStoryHighlight();
+  }
+
   /* ---------- native-scroll depth on project photography ---------- */
   var depthPhotos = document.querySelectorAll(".gallery .project-photo");
 
