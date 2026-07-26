@@ -140,7 +140,8 @@ window.JADE_PROJECTS = [
     floors: "Ground + 2 floors",
     blurb: "A leisure and commercial complex in Curepipe.",
     body: null,
-    features: null
+    features: null,
+    images: ["img/projects/le-manhattan.jpg"]
   },
   {
     slug: "orchard-center",
@@ -227,16 +228,6 @@ window.JADE_PROJECTS = [
     features: null
   },
   {
-    slug: "cyber-village",
-    name: "Cyber Village",
-    category: "Residential",
-    location: "Ebène area",
-    floors: null,
-    blurb: "A very good location for professionals working in Ebène and the surrounding area.",
-    body: null,
-    features: null
-  },
-  {
     slug: "residence-beau-soleil",
     name: "Residence Beau Soleil",
     category: "Residential",
@@ -261,13 +252,14 @@ window.JADE_PROJECTS = [
   /* ---------- Land Parceling ---------- */
   {
     slug: "residence-trianon",
-    name: "Residence Trianon",
+    name: "RiverEdge Trianon",
     category: "Land Parceling",
     location: "Trianon",
     floors: null,
     blurb: "A popular area close to tennis courts, commercial areas and Ebène Cybercity.",
     body: null,
-    features: null
+    features: null,
+    images: ["img/projects/riveredge-trianon.jpg"]
   },
   {
     slug: "domaine-du-mesnil",

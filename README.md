@@ -29,7 +29,7 @@ css/style.css        design system + all sections
 js/main.js           reveals + image depth (vanilla, no deps)
 js/webgl-hero.js     progressive WebGL hero lens (vanilla, no deps)
 js/project-orbit.js  sticky project orbit + metric sequence (vanilla, no deps)
-js/projects-data.js  all 30 projects (metadata, copy, optional image paths)
+js/projects-data.js  all 29 projects (metadata, copy, optional image paths)
 ```
 
 The WebGL layer is optional: the original hero image remains visible when
@@ -61,7 +61,7 @@ Current homepage image set:
 | Slot | Suggested shot |
 |---|---|
 | Hero | Ebène Cybercity night panorama |
-| Gallery ×6 | Alexander House, Raffles Tower, Barclays House, Moorgate House, Orchard Center, St. James Court |
+| Gallery ×6 | Alexander House, Raffles Tower, Barclays House, RiverEdge Trianon, Le Manhattan, St. James Court |
 | Project orbit ×10 | Delivered buildings and current architectural renders |
 
 Brand assets supplied by Jade Group are stored in `img/brand/`. The silver
