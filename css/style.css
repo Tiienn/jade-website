@@ -1068,10 +1068,19 @@ a:focus-visible {
   gap: clamp(1rem, 2.5vw, 2.5rem);
   padding: 0 var(--gutter);
 }
-.pdetail__gallery .placeholder:first-child { aspect-ratio: 16/10; }
-.pdetail__gallery .placeholder:last-child { aspect-ratio: 4/5; align-self: end; }
+.pdetail__gallery .placeholder,
+.pdetail__gallery .project-photo { aspect-ratio: 4/3; }
+.pdetail__gallery .placeholder:first-child,
 .pdetail__gallery .project-photo:first-child { aspect-ratio: 16/10; }
-.pdetail__gallery .project-photo:last-child { aspect-ratio: 4/5; align-self: end; }
+.pdetail__gallery .placeholder:nth-child(even),
+.pdetail__gallery .project-photo:nth-child(even) {
+  aspect-ratio: 4/3;
+  align-self: end;
+  margin-top: clamp(2rem, 10vh, 7rem);
+}
+.pdetail__gallery .project-photo:nth-child(n + 3) {
+  margin-top: clamp(2rem, 7vh, 5rem);
+}
 .pdetail__gallery--single { grid-template-columns: 1fr; }
 .pdetail__gallery--single .project-photo:first-child { aspect-ratio: 16/8.5; }
 .pdetail__next {

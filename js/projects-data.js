@@ -10,11 +10,17 @@ window.JADE_PROJECTS = [
     name: "Alexander House",
     category: "Offices",
     location: "35 Cybercity, Ebène",
+    mapUrl: "https://www.google.com/maps/place/Alexander+House,+Quatre+Bornes/@-20.242372,57.4929153,17z/data=!3m1!4b1!4m6!3m5!1s0x217c5ae243de6d25:0x8fff6d7bb1d35497!8m2!3d-20.242372!4d57.4929153!16s%2Fg%2F1thr4kz1?entry=ttu&g_ep=EgoyMDI2MDcyMi4wIKXMDSoASAFQAw%3D%3D",
     floors: "Ground + 4 floors",
     blurb: "Among the first buildings built in Ebène — the fine touch of Jade Group in the Cybercity.",
     body: "Alexander House is the fine touch of the Jade Group in the Ebène Cybercity. Its unique concept and architectural style create a charming sanctuary within the area, all contributing to an efficient yet pleasant office environment. It is also home to Jade Group's own offices.",
     features: ["On-site parking", "24/7 security & CCTV", "Parking attendant", "Access control", "Building Manager & maintenance team", "Generators and lifts"],
-    images: ["img/projects/alexander-house-night.jpg", "img/projects/alexander-house-2.jpg"]
+    images: [
+      "img/projects/alexander-house-gallery-night.jpg",
+      "img/projects/alexander-house-gallery-exterior.jpg",
+      "img/projects/alexander-house-gallery-reception.jpg",
+      "img/projects/alexander-house-gallery-lounge.jpg"
+    ]
   },
   {
     slug: "barclays-house",
