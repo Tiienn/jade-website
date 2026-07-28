@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ebène — Jade Group</title>
+  <meta name="description" content="Three Jade Group buildings in Ebène Cybercity. Explore the plan and turn each building in three dimensions.">
+
+  <script>document.documentElement.classList.add("js");</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css?v=20260727-1">
+  <link rel="stylesheet" href="css/ebene.css?v=1">
+  <link rel="icon" href="img/favicon.svg?v=20260717-2" type="image/svg+xml">
+</head>
+<body id="top">
+
+  <header class="nav nav--dark">
+    <a class="nav__brand" href="index.html" aria-label="Jade Group — home">
+      <img class="nav__logo nav__logo--light" src="img/brand/jade-group-white.png" alt="">
+      <img class="nav__logo nav__logo--dark" src="img/brand/jade-group-dark.png" alt="Jade Group">
+    </a>
+    <nav class="nav__links" aria-label="Main">
+      <a href="index.html">Index,</a>
+      <a href="projects.html">Projects,</a>
+      <a href="index.html#people">People,</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="eb" id="eb">
+
+    <!-- night photograph -->
+    <figure class="eb__photo" aria-hidden="true">
+      <img src="img/hero-ebene-night-clean.jpg" alt="" fetchpriority="high">
+    </figure>
+
+    <!-- blueprint plan of the Ebène block -->
+    <div class="eb__plan" aria-hidden="true">
+      <svg viewBox="-260 -175 545 350" preserveAspectRatio="xMidYMid meet" role="img">
+        <defs>
+          <pattern id="grid" width="25" height="25" patternUnits="userSpaceOnUse">
+            <path d="M25 0H0V25" fill="none" stroke="rgba(255,255,255,.055)" stroke-width="0.6"/>
+          </pattern>
+        </defs>
+        <rect x="-260" y="-175" width="545" height="350" fill="url(#grid)"/>
+
+        <!-- indicative road network -->
+        <g class="eb__roads" fill="none" stroke="rgba(255,255,255,.30)" stroke-width="2.4">
+          <path d="M-260 40 C -150 46, -60 66, 20 108 S 150 168, 285 172"/>
+          <path d="M-118 -175 C -108 -70, -80 -10, -34 44 S 60 120, 128 175"/>
+          <path d="M-260 -118 C -140 -122, 20 -104, 122 -66 S 236 -20, 285 -6"/>
+          <circle cx="34" cy="70" r="21"/>
+        </g>
+
+        <!-- neighbouring blocks, drawn faintly -->
+        <g class="eb__context" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.16)" stroke-width="0.9">
+          <rect x="-236" y="-58" width="52" height="38"/>
+          <rect x="-232" y="6" width="44" height="30"/>
+          <rect x="76" y="-140" width="58" height="40"/>
+          <rect x="146" y="80" width="66" height="44"/>
+          <rect x="-96" y="-152" width="40" height="30"/>
+          <rect x="212" y="-128" width="50" height="34"/>
+        </g>
+
+        <!-- the three Jade buildings -->
+        <g class="eb__marks">
+          <g class="eb__mark" data-slug="alexander-house" tabindex="0" role="button"
+             aria-label="Alexander House — open 3D model">
+            <rect class="eb__hit" x="-192" y="-127" width="63" height="70"/>
+            <rect class="eb__foot" x="-182.2" y="-117.1" width="43" height="50"/>
+            <text class="eb__label" x="-160.7" y="-131">ALEXANDER HOUSE</text>
+            <text class="eb__sub"   x="-160.7" y="-58">G+4</text>
+          </g>
+
+          <g class="eb__mark" data-slug="barclays-house" tabindex="0" role="button"
+             aria-label="Barclays House — open 3D model">
+            <rect class="eb__hit" x="-72" y="56" width="65" height="55"/>
+            <rect class="eb__foot" x="-62.2" y="66.2" width="45" height="35"/>
+            <text class="eb__label" x="-39.7" y="52">BARCLAYS HOUSE</text>
+            <text class="eb__sub"   x="-39.7" y="114">G+6</text>
+          </g>
+
+          <g class="eb__mark" data-slug="raffles-tower" tabindex="0" role="button"
+             aria-label="Raffles Tower — open 3D model">
+            <rect class="eb__hit" x="170" y="-22" width="60" height="60"/>
+            <rect class="eb__foot" x="180.4" y="-11.6" width="40" height="40"/>
+            <text class="eb__label" x="200.4" y="-26">RAFFLES TOWER</text>
+            <text class="eb__sub"   x="200.4" y="42">G+12</text>
+          </g>
+        </g>
+
+        <!-- scale bar -->
+        <g class="eb__scale" stroke="rgba(255,255,255,.4)" stroke-width="1.4" fill="none">
+          <path d="M-236 152 h100 M-236 148 v8 M-186 149 v6 M-136 148 v8"/>
+        </g>
+        <text class="eb__scaletext" x="-186" y="167">100 m</text>
+      </svg>
+    </div>
+
+    <!-- opening copy -->
+    <div class="eb__intro">
+      <p class="eb__eyebrow">Ebène Cybercity · Mauritius</p>
+      <h1 class="eb__title">Three buildings<br><span class="serif">we put here.</span></h1>
+      <p class="eb__lede serif">Within four hundred metres of each other stand three of
+        the buildings Jade Group developed. Turn the plan, then turn the buildings.</p>
+      <button class="eb__enter" type="button">Show the plan</button>
+    </div>
+
+    <p class="eb__hint" aria-hidden="true">Select a building</p>
+  </main>
+
+  <!-- building viewer -->
+  <aside class="bv" id="bv" hidden aria-modal="true" role="dialog" aria-labelledby="bv-name">
+    <button class="bv__close" type="button" aria-label="Close">Close ✕</button>
+    <div class="bv__inner">
+      <div class="bv__stage">
+        <div class="bv__frames" id="bv-frames"></div>
+        <img class="bv__still" id="bv-still" alt="" hidden>
+        <p class="bv__drag" id="bv-drag">Drag to turn ↔</p>
+        <p class="bv__loading" id="bv-loading" hidden>Loading model…</p>
+      </div>
+      <div class="bv__meta">
+        <p class="eyebrow eyebrow--light" id="bv-cat"></p>
+        <h2 id="bv-name"></h2>
+        <dl class="bv__facts" id="bv-facts"></dl>
+        <p class="bv__note serif" id="bv-note"></p>
+        <a class="bv__link" id="bv-link" href="#">Open project page ↗</a>
+      </div>
+    </div>
+  </aside>
+
+  <script src="js/ebene.js?v=1"></script>
+</body>
+</html>

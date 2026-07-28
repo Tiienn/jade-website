@@ -1,0 +1,11 @@
+# Never ship these to the live site.
+# Without this, anything sitting in the project root gets copied into the
+# deployment — which is how 58 internal QA screenshots ended up public.
+
+assets-in/
+.claude/
+qa-*.png
+design-qa.md
+*.blend
+*.blend1
+.DS_Store
