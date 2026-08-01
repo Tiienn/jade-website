@@ -1,196 +1,197 @@
-/* Jade Group — Ebène interactive plan + turntable viewer (prototype, no deps) */
-
-(function () {
-  "use strict";
-
-  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  /* Buildings that have a rendered turntable declare frames + path.
-     The others fall back to a photograph until their model exists. */
-  var DATA = {
-    "alexander-house": {
-      name: "Alexander House",
-      category: "Offices",
-      facts: [["Location", "35 Cybercity, Ebène"], ["Scale", "Ground + 4 floors"], ["Sector", "Offices"]],
-      note: "Among the first buildings built in Ebène, and home to Jade Group's own offices.",
-      href: "project.html?p=alexander-house",
-      frames: 24,
-      path: "img/buildings/alexander-house/"
-    },
-    "barclays-house": {
-      name: "Barclays House",
-      category: "Offices",
-      facts: [["Location", "Ebène Cybercity"], ["Scale", "Ground + 6 floors"], ["Sector", "Offices"]],
-      note: "Also known as Jade Tower — home to the Barclays Bank Ltd. head office. 3D model in production.",
-      href: "project.html?p=barclays-house",
-      still: "img/projects/barclays-house-blue-sky.jpg"
-    },
-    "raffles-tower": {
-      name: "Raffles Tower",
-      category: "Offices",
-      facts: [["Location", "Ebène Cybercity"], ["Scale", "Ground + 12 floors"], ["Sector", "Offices"]],
-      note: "A modern tower overlooking the motorway, today known as Standard Chartered Tower. 3D model in production.",
-      href: "project.html?p=raffles-tower",
-      still: "img/projects/raffles-tower-blue-sky.jpg"
-    }
-  };
-
-  var eb      = document.getElementById("eb");
-  var enter   = document.querySelector(".eb__enter");
-  var marks   = Array.prototype.slice.call(document.querySelectorAll(".eb__mark"));
-  var bv      = document.getElementById("bv");
-  var frames  = document.getElementById("bv-frames");
-  var still   = document.getElementById("bv-still");
-  var loading = document.getElementById("bv-loading");
-  var dragHint= document.getElementById("bv-drag");
-  var stage   = document.querySelector(".bv__stage");
-  var lastFocus = null;
-
-  /* ---------------- reveal the plan ---------------- */
-  function showPlan() {
-    eb.classList.add("is-plan");
-    enter.setAttribute("aria-expanded", "true");
+const LANDMARKS = {
+  "alexander-house": {
+    number: "01",
+    name: "Alexander House",
+    meta: "Ebène Cybercity · G+4",
+    project: "project.html?p=alexander-house",
+    views: [
+      { label: "Aerial", src: "img/tours/alexander-house/01-aerial-v2.jpg", alt: "Alexander House and its private roundabout at night" },
+      { label: "Facade", src: "img/tours/alexander-house/02-facade.jpg", alt: "Curved front facade of Alexander House" },
+      { label: "Night", src: "img/tours/alexander-house/03-night.jpg", alt: "Alexander House illuminated at night" },
+      { label: "Interior", src: "img/tours/alexander-house/04-interior.jpg", alt: "Reception interior at Alexander House" }
+    ]
+  },
+  "barclays-house": {
+    number: "02",
+    name: "Barclays House",
+    meta: "Ebène Cybercity · G+6",
+    project: "project.html?p=barclays-house",
+    views: [
+      { label: "Aerial", src: "img/tours/barclays-house/01-aerial.jpg", alt: "Barclays House at blue hour" },
+      { label: "Facade", src: "img/tours/barclays-house/02-facade.jpg", alt: "Front facade of Barclays House" },
+      { label: "Approach", src: "img/tours/barclays-house/03-approach.jpg", alt: "Approach to Barclays House" },
+      { label: "Detail", src: "img/tours/barclays-house/04-detail.jpg", alt: "Architectural detail of Barclays House" }
+    ]
+  },
+  "raffles-tower": {
+    number: "03",
+    name: "Raffles Tower",
+    meta: "Ebène Cybercity · G+12",
+    project: "project.html?p=raffles-tower",
+    views: [
+      { label: "Aerial", src: "img/tours/raffles-tower/01-aerial.jpg", alt: "Raffles Tower beside its large parking site at blue hour" },
+      { label: "Facade", src: "img/tours/raffles-tower/02-facade.jpg", alt: "Low-angle view of the real Raffles Tower facade and entrance canopy" },
+      { label: "Atrium", src: "img/tours/raffles-tower/03-atrium.jpg", alt: "Central glazed atrium and Raffles Tower signage" },
+      { label: "Architecture", src: "img/tours/raffles-tower/04-architecture.jpg", alt: "Architectural view of Raffles Tower" }
+    ]
   }
-  enter.addEventListener("click", showPlan);
+};
 
-  // reveal on first scroll too, so it feels connected to the page
-  window.addEventListener("scroll", function once() {
-    if (window.scrollY > 40) { showPlan(); window.removeEventListener("scroll", once); }
-  }, { passive: true });
+const map = document.getElementById("landmark-map");
+const pins = Array.from(document.querySelectorAll("[data-map-select]"));
+const tour = document.getElementById("building-tour");
+const stage = document.getElementById("tour-stage");
+const image = document.getElementById("tour-image");
+const eyebrow = document.getElementById("tour-eyebrow");
+const title = document.getElementById("tour-title");
+const meta = document.getElementById("tour-meta");
+const project = document.getElementById("tour-project");
+const views = document.getElementById("tour-views");
+const current = document.getElementById("tour-current");
+const total = document.getElementById("tour-total");
+const close = document.getElementById("close-tour");
 
-  /* ---------------- turntable ---------------- */
-  var imgs = [];
-  var current = 0;
-  var frameCount = 0;
-  var spin = 0;
+let activeSlug = "alexander-house";
+let activeView = 0;
+let lastTrigger = null;
+let dragStart = null;
+let closeTimer = null;
 
-  function buildFrames(cfg, done) {
-    frames.innerHTML = "";
-    imgs = [];
-    frameCount = cfg.frames;
-    var loaded = 0;
-    loading.hidden = false;
+function pad(number) {
+  return String(number).padStart(2, "0");
+}
 
-    for (var i = 0; i < frameCount; i++) {
-      var im = new Image();
-      im.decoding = "async";
-      im.alt = i === 0 ? cfg.name + " — three-dimensional model" : "";
-      im.src = cfg.path + String(i).padStart(2, "0") + ".webp";
-      im.addEventListener("load", function () {
-        if (++loaded === frameCount) { loading.hidden = true; done && done(); }
-      });
-      im.addEventListener("error", function () {
-        if (++loaded === frameCount) { loading.hidden = true; done && done(); }
-      });
-      frames.appendChild(im);
-      imgs.push(im);
-    }
-    show(0);
-  }
+function preloadBuilding(building) {
+  building.views.forEach((view) => {
+    const preload = new Image();
+    preload.src = view.src;
+  });
+}
 
-  function show(i) {
-    if (!imgs.length) return;
-    current = ((i % frameCount) + frameCount) % frameCount;
-    for (var n = 0; n < imgs.length; n++) {
-      imgs[n].classList.toggle("is-shown", n === current);
-    }
-  }
+function renderView(index, immediate = false) {
+  const building = LANDMARKS[activeSlug];
+  const nextIndex = (index + building.views.length) % building.views.length;
+  const view = building.views[nextIndex];
+  activeView = nextIndex;
 
-  /* gentle auto-rotation until the visitor takes over */
-  function autoSpin() {
-    if (reduce || !frameCount) return;
-    stopSpin();
-    spin = window.setInterval(function () { show(current + 1); }, 110);
-  }
-  function stopSpin() { if (spin) { window.clearInterval(spin); spin = 0; } }
-
-  /* drag to turn */
-  var dragging = false, startX = 0, startFrame = 0;
-
-  function pointerDown(e) {
-    if (!frameCount) return;
-    dragging = true; stopSpin();
-    startX = (e.touches ? e.touches[0].clientX : e.clientX);
-    startFrame = current;
-    stage.classList.add("is-dragging");
-  }
-  function pointerMove(e) {
-    if (!dragging) return;
-    var x = (e.touches ? e.touches[0].clientX : e.clientX);
-    var dx = x - startX;
-    var perFrame = stage.clientWidth / (frameCount * 1.25);
-    show(startFrame + Math.round(dx / perFrame));
-  }
-  function pointerUp() { dragging = false; stage.classList.remove("is-dragging"); }
-
-  stage.addEventListener("mousedown", pointerDown);
-  window.addEventListener("mousemove", pointerMove);
-  window.addEventListener("mouseup", pointerUp);
-  stage.addEventListener("touchstart", pointerDown, { passive: true });
-  stage.addEventListener("touchmove", pointerMove, { passive: true });
-  stage.addEventListener("touchend", pointerUp);
-
-  /* ---------------- open / close ---------------- */
-  function open(slug) {
-    var cfg = DATA[slug];
-    if (!cfg) return;
-    lastFocus = document.activeElement;
-
-    document.getElementById("bv-cat").textContent = cfg.category;
-    document.getElementById("bv-name").textContent = cfg.name;
-    document.getElementById("bv-note").textContent = cfg.note;
-    document.getElementById("bv-link").href = cfg.href;
-
-    var dl = document.getElementById("bv-facts");
-    dl.innerHTML = "";
-    cfg.facts.forEach(function (f) {
-      var row = document.createElement("div");
-      row.innerHTML = "<dt>" + f[0] + "</dt><dd>" + f[1] + "</dd>";
-      dl.appendChild(row);
+  if (!immediate) image.classList.add("is-changing");
+  window.setTimeout(() => {
+    image.src = view.src;
+    image.alt = view.alt;
+    current.textContent = pad(nextIndex + 1);
+    views.querySelectorAll("button").forEach((button, buttonIndex) => {
+      const selected = buttonIndex === nextIndex;
+      button.classList.toggle("is-active", selected);
+      button.setAttribute("aria-current", selected ? "true" : "false");
     });
+  }, immediate ? 0 : 180);
+}
 
-    marks.forEach(function (m) { m.classList.toggle("is-active", m.dataset.slug === slug); });
+image.addEventListener("load", () => {
+  image.classList.remove("is-changing");
+});
 
-    if (cfg.frames) {
-      still.hidden = true; frames.hidden = false; dragHint.hidden = false;
-      buildFrames(cfg, autoSpin);
-    } else {
-      stopSpin();
-      frames.innerHTML = ""; frames.hidden = true;
-      loading.hidden = true; dragHint.hidden = true;
-      still.hidden = false;
-      still.src = cfg.still;
-      still.alt = cfg.name;
-    }
+function renderBuilding(slug) {
+  const building = LANDMARKS[slug];
+  if (!building) return;
 
-    bv.hidden = false;
-    requestAnimationFrame(function () { bv.classList.add("is-open"); });
-    document.body.style.overflow = "hidden";
-    document.querySelector(".bv__close").focus();
-  }
+  activeSlug = slug;
+  activeView = 0;
+  eyebrow.textContent = `Jade landmark ${building.number}`;
+  title.textContent = building.name;
+  meta.textContent = building.meta;
+  project.href = building.project;
+  total.textContent = pad(building.views.length);
+  views.replaceChildren();
 
-  function close() {
-    stopSpin();
-    bv.classList.remove("is-open");
-    document.body.style.overflow = "";
-    marks.forEach(function (m) { m.classList.remove("is-active"); });
-    window.setTimeout(function () { bv.hidden = true; frames.innerHTML = ""; imgs = []; frameCount = 0; }, 400);
-    if (lastFocus) lastFocus.focus();
-  }
-
-  marks.forEach(function (m) {
-    m.addEventListener("click", function () { open(m.dataset.slug); });
-    m.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(m.dataset.slug); }
-    });
+  building.views.forEach((view, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.innerHTML = `<span>${pad(index + 1)}</span>${view.label}`;
+    button.addEventListener("click", () => renderView(index));
+    views.append(button);
   });
 
-  document.querySelector(".bv__close").addEventListener("click", close);
-  bv.addEventListener("click", function (e) { if (e.target === bv) close(); });
-  document.addEventListener("keydown", function (e) {
-    if (bv.hidden) return;
-    if (e.key === "Escape") close();
-    if (e.key === "ArrowRight") { stopSpin(); show(current + 1); }
-    if (e.key === "ArrowLeft")  { stopSpin(); show(current - 1); }
+  renderView(0, true);
+  preloadBuilding(building);
+}
+
+function openTour(slug, trigger) {
+  window.clearTimeout(closeTimer);
+  lastTrigger = trigger;
+  pins.forEach((pin) => pin.classList.toggle("is-active", pin.dataset.mapSelect === slug));
+  renderBuilding(slug);
+  tour.hidden = false;
+  tour.setAttribute("aria-modal", "true");
+  map.setAttribute("aria-hidden", "true");
+  document.body.classList.add("tour-open");
+  // Focus has to wait for `is-open`: until that class lands the panel is still
+  // visually hidden, and focusing a hidden element silently fails — which left
+  // keyboard users stranded on <body> with the tour open.
+  requestAnimationFrame(() => {
+    tour.classList.add("is-open");
+    close.focus({ preventScroll: true });
   });
-})();
+}
+
+function closeTour() {
+  tour.classList.remove("is-open");
+  tour.removeAttribute("aria-modal");
+  map.removeAttribute("aria-hidden");
+  document.body.classList.remove("tour-open");
+  pins.forEach((pin) => pin.classList.remove("is-active"));
+  closeTimer = window.setTimeout(() => {
+    tour.hidden = true;
+    image.removeAttribute("src");
+  }, 520);
+  if (lastTrigger) lastTrigger.focus({ preventScroll: true });
+}
+
+pins.forEach((pin) => {
+  pin.addEventListener("click", () => openTour(pin.dataset.mapSelect, pin));
+});
+
+close.addEventListener("click", closeTour);
+
+stage.addEventListener("pointermove", (event) => {
+  if (event.pointerType !== "mouse" || dragStart) return;
+  const bounds = stage.getBoundingClientRect();
+  const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * -2;
+  const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * -2;
+  stage.style.setProperty("--look-x", `${x * 1.2}%`);
+  stage.style.setProperty("--look-y", `${y * 1.2}%`);
+});
+
+stage.addEventListener("pointerleave", () => {
+  stage.style.setProperty("--look-x", "0%");
+  stage.style.setProperty("--look-y", "0%");
+});
+
+stage.addEventListener("pointerdown", (event) => {
+  dragStart = { x: event.clientX, y: event.clientY, pointerId: event.pointerId };
+  stage.setPointerCapture(event.pointerId);
+  stage.classList.add("is-dragging");
+});
+
+stage.addEventListener("pointerup", (event) => {
+  if (!dragStart) return;
+  const distance = event.clientX - dragStart.x;
+  if (Math.abs(distance) > 55) renderView(activeView + (distance < 0 ? 1 : -1));
+  stage.releasePointerCapture(dragStart.pointerId);
+  dragStart = null;
+  stage.classList.remove("is-dragging");
+});
+
+stage.addEventListener("pointercancel", () => {
+  dragStart = null;
+  stage.classList.remove("is-dragging");
+});
+
+document.addEventListener("keydown", (event) => {
+  if (tour.hidden) return;
+  if (event.key === "Escape") closeTour();
+  if (event.key === "ArrowRight") renderView(activeView + 1);
+  if (event.key === "ArrowLeft") renderView(activeView - 1);
+});
+
+window.__ebeneModuleLoaded = true;

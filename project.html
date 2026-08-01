@@ -6,13 +6,35 @@
   <title>Project — Jade Group</title>
   <meta name="description" content="A Jade Group development in Mauritius.">
 
+  <!-- Defaults. The script below rewrites title/description/og:* per project,
+       which Google honours (it renders JS). Non-rendering scrapers such as
+       WhatsApp and Facebook only ever see these defaults, because every
+       project shares this one file via ?p=<slug>. Giving each project its own
+       social preview needs one static page per project — see README. -->
+  <link rel="canonical" href="https://www.jadegroup.mu/projects.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Jade Group">
+  <meta property="og:locale" content="en_MU">
+  <meta property="og:url" content="https://www.jadegroup.mu/projects.html">
+  <meta property="og:title" content="Projects — Jade Group">
+  <meta property="og:description" content="Office buildings, commercial centres, residences and land developments across Mauritius since 1976.">
+  <meta property="og:image" content="https://www.jadegroup.mu/img/og-cover.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Raffles Tower, Barclays House and Alexander House at night in Ebène Cybercity">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Projects — Jade Group">
+  <meta name="twitter:description" content="Office buildings, commercial centres, residences and land developments across Mauritius since 1976.">
+  <meta name="twitter:image" content="https://www.jadegroup.mu/img/og-cover.jpg">
+  <meta name="theme-color" content="#0c0c0b">
+
   <script>document.documentElement.classList.add("js");</script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/style.css?v=20260727-1">
+  <link rel="stylesheet" href="css/style.css?v=20260731-5">
   <link rel="icon" href="img/favicon.svg?v=20260717-2" type="image/svg+xml">
 </head>
 <body id="top">
@@ -25,7 +47,7 @@
     <nav class="nav__links" aria-label="Main">
       <a href="index.html">Index,</a>
       <a href="projects.html">Projects,</a>
-      <a href="index.html#people">People,</a>
+      <a href="index.html#people">Team,</a>
       <a href="index.html#contact">Contact</a>
     </nav>
   </header>
@@ -81,9 +103,33 @@
       if (i === -1) { window.location.replace("projects.html"); return; }
       var p = all[i];
 
-      document.title = p.name + " — Jade Group";
-      document.querySelector('meta[name="description"]').content =
-        p.name + " — " + p.blurb + " A Jade Group development in Mauritius.";
+      var pageTitle = p.name + " — Jade Group";
+      var pageDesc = p.name + " — " + p.blurb + " A Jade Group development in Mauritius.";
+      var pageUrl = "https://www.jadegroup.mu/project.html?p=" + p.slug;
+      var pageImg = p.images && p.images.length
+        ? "https://www.jadegroup.mu/" + p.images[0]
+        : "https://www.jadegroup.mu/img/og-cover.jpg";
+
+      document.title = pageTitle;
+
+      // Keep the social/canonical tags in step with the project being shown.
+      var meta = {
+        'meta[name="description"]': pageDesc,
+        'meta[property="og:title"]': pageTitle,
+        'meta[property="og:description"]': pageDesc,
+        'meta[property="og:url"]': pageUrl,
+        'meta[property="og:image"]': pageImg,
+        'meta[property="og:image:alt"]': "Photograph of " + p.name,
+        'meta[name="twitter:title"]': pageTitle,
+        'meta[name="twitter:description"]': pageDesc,
+        'meta[name="twitter:image"]': pageImg
+      };
+      Object.keys(meta).forEach(function (sel) {
+        var el = document.querySelector(sel);
+        if (el) el.setAttribute("content", meta[sel]);
+      });
+      var canonical = document.querySelector('link[rel="canonical"]');
+      if (canonical) canonical.setAttribute("href", pageUrl);
 
       var $ = function (id) { return document.getElementById(id); };
       $("p-cat").textContent = p.category;
@@ -156,6 +202,6 @@
       $("p-next-name").textContent = next.name;
     })();
   </script>
-  <script src="js/main.js?v=20260718-2"></script>
+  <script src="js/main.js?v=20260730-4"></script>
 </body>
 </html>

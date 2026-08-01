@@ -25,12 +25,13 @@ No build step, no dependencies.
 index.html           home (one long page)
 projects.html        full portfolio, grouped by sector
 project.html         detail template — renders ?p=<slug> from the data file
-ebene.html           Ebène interactive: plan of the block + 3D building viewer
+ebene.html           Ebène interactive: cinematic map + on-demand 3D viewer
 css/style.css        design system + all sections
-css/ebene.css        Ebène plan and building viewer
+css/ebene.css        Ebène map and building viewer
 js/main.js           reveals + image depth (vanilla, no deps)
 js/project-orbit.js  sticky project orbit + metric sequence (vanilla, no deps)
-js/ebene.js          plan interaction + turntable viewer (vanilla, no deps)
+js/ebene.js          3D viewer interface and project data
+js/ebene-scene.js    Three.js scene, landmarks, roads and landscaping
 js/projects-data.js  all 29 projects (metadata, copy, optional image paths)
 img/buildings/       pre-rendered turntable frames, one folder per building
 ```
@@ -74,23 +75,22 @@ legible across paper and photography; the white wordmark signs off the footer.
 
 ## The Ebène interactive (`ebene.html`)
 
-A night photograph of Ebène Cybercity resolves into a blueprint plan of the
-block. Three footprints are picked out in jade — Alexander House, Barclays
-House and Raffles Tower, the three Jade Group buildings standing within
-about 375 m of each other. Selecting one opens a viewer where the building
-turns through a 140° arc.
+The interactive opens on a **photoreal night aerial** of Ebène Cybercity. Jade
+beacons identify Alexander House, Barclays House and Raffles Tower in their
+real-world context; selecting one updates the project title, metadata and link.
+The main view remains photographic so the first impression stays realistic.
 
-Rotation is **pre-rendered image frames**, not live 3D — no WebGL, no
-library, and it behaves identically everywhere. Frames live in
-`img/buildings/<slug>/00.webp …` and are only fetched when a building is
-opened (24 frames ≈ 635 KB).
+`Explore the building` lazily opens the optional **live WebGL district model**.
+Alexander House incorporates the supplied CAD-derived STL geometry. Barclays
+House and Raffles Tower are lightweight architectural reconstructions based on
+the supplied multi-angle render sets. The 3D scene includes roads, the Alexander
+House roundabout and parking beside Raffles Tower. Users can drag to orbit,
+scroll to move closer, switch buildings and open a project page or exact Google
+Maps location. Three.js is vendored in `js/vendor/`, so the experience has no
+runtime CDN dependency.
 
-Buildings without frames fall back to a photograph; declare them in the
-`DATA` object at the top of `js/ebene.js` with `still:` instead of
-`frames:`/`path:`.
-
-Frames are produced from CAD/reference in Blender. Source material is in
-`assets-in/` (git-ignored, not deployed).
+Source CAD and reference material is in `assets-in/` (git-ignored, not
+deployed).
 
 ## Source assets and deployment
 
@@ -98,6 +98,32 @@ Frames are produced from CAD/reference in Blender. Source material is in
 design-QA log and its screenshots. It is excluded from git (`.gitignore`)
 **and** from deployment (`.vercelignore`). Keep internal material there —
 anything left in the project root is copied into the live site.
+
+## Metadata, sharing and SEO
+
+Every page carries Open Graph and Twitter Card tags, a canonical link and a
+`theme-color`; the homepage also has `RealEstateAgent` JSON-LD (address, phone,
+founding year, coordinates) for local search. `img/og-cover.jpg` (1200×630) is
+the share image — the three Ebène landmarks at night.
+
+**The canonical host is `https://www.jadegroup.mu`.** If the site is served
+anywhere else, update it in all four pages plus `robots.txt` and `sitemap.xml`.
+
+`sitemap.xml` is generated, not hand-written — it lists the three real pages
+plus one entry per project. Regenerate it whenever projects change; the
+snippet that builds it reads slugs straight out of `js/projects-data.js`.
+
+### Known limitation — per-project social previews
+
+Every project shares one file via `project.html?p=<slug>`. The page rewrites
+its own title, description and `og:*` tags for the project being viewed, which
+**Google honours** because it renders JavaScript. **WhatsApp and Facebook do
+not run JavaScript**, so they fall back to the generic defaults in the HTML —
+every project link previews as "Projects — Jade Group".
+
+Fixing it properly means one static file per project (e.g. `p/alexander-house.html`)
+with the tags baked in, generated from `js/projects-data.js`. That also improves
+crawlability. It changes project URLs, so it is a deliberate step, not a tweak.
 
 ## Content notes
 

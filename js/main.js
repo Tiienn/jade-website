@@ -39,6 +39,7 @@
 
   if (hero && !reduceMotion && window.innerWidth > 700) {
     var heroRaf = 0;
+    var heroScrollTimer = 0;
 
     function updateHeroSequence() {
       heroRaf = 0;
@@ -48,13 +49,28 @@
       var copy = Math.max(0, Math.min(1, (progress - 0.08) / 0.62));
       var easedCopy = 1 - Math.pow(1 - copy, 3);
 
+      var landmarkScale = 1 + (progress * 0.075);
+      var landmarkCopyOpacity = Math.max(0, 1 - (progress * 1.16));
+      var landmarkUiOpacity = 1 - (progress * 0.55);
+
       hero.style.setProperty("--hero-pan", (progress * 100).toFixed(2) + "%");
       hero.style.setProperty("--hero-pan-progress", progress.toFixed(4));
       hero.style.setProperty("--hero-copy", easedCopy.toFixed(4));
       hero.style.setProperty("--hero-copy-y", ((1 - easedCopy) * 32).toFixed(2) + "px");
+      hero.style.setProperty("--landmark-scale", landmarkScale.toFixed(4));
+      hero.style.setProperty("--landmark-x", (-progress * 1.4).toFixed(2) + "%");
+      hero.style.setProperty("--landmark-y", (progress * 1.9).toFixed(2) + "%");
+      hero.style.setProperty("--landmark-copy-opacity", landmarkCopyOpacity.toFixed(3));
+      hero.style.setProperty("--landmark-copy-y", (-progress * 110).toFixed(2) + "px");
+      hero.style.setProperty("--landmark-ui-opacity", landmarkUiOpacity.toFixed(3));
     }
 
     function requestHeroSequence() {
+      hero.classList.add("is-scrolling");
+      window.clearTimeout(heroScrollTimer);
+      heroScrollTimer = window.setTimeout(function () {
+        hero.classList.remove("is-scrolling");
+      }, 180);
       if (!heroRaf) heroRaf = window.requestAnimationFrame(updateHeroSequence);
     }
 
@@ -62,50 +78,16 @@
     window.addEventListener("resize", requestHeroSequence, { passive: true });
     updateHeroSequence();
   } else if (hero) {
-    hero.style.setProperty("--hero-pan", "52%");
-    hero.style.setProperty("--hero-pan-progress", "0.52");
+    hero.style.setProperty("--hero-pan", "0%");
+    hero.style.setProperty("--hero-pan-progress", "0");
     hero.style.setProperty("--hero-copy", "1");
     hero.style.setProperty("--hero-copy-y", "0px");
-  }
-
-  /* ---------- cursor daylight reveal over the night hero ---------- */
-  var heroSticky = hero ? hero.querySelector(".hero__sticky") : null;
-  var heroMedia = hero ? hero.querySelector(".hero__media") : null;
-  var daylightImage = hero ? hero.querySelector(".hero__image--day") : null;
-  var canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-
-  if (heroSticky && heroMedia && daylightImage && canHover && !reduceMotion) {
-    var daylightRaf = 0;
-    var daylightX = 0;
-    var daylightY = 0;
-
-    function positionDaylightReveal() {
-      daylightRaf = 0;
-      var rect = heroMedia.getBoundingClientRect();
-      var x = Math.max(0, Math.min(rect.width, daylightX - rect.left));
-      var y = Math.max(0, Math.min(rect.height, daylightY - rect.top));
-
-      heroMedia.style.setProperty("--daylight-x", x.toFixed(1) + "px");
-      heroMedia.style.setProperty("--daylight-y", y.toFixed(1) + "px");
-    }
-
-    heroSticky.addEventListener("pointerenter", function (event) {
-      daylightX = event.clientX;
-      daylightY = event.clientY;
-      heroSticky.classList.add("is-daylight-active");
-      positionDaylightReveal();
-    });
-
-    heroSticky.addEventListener("pointermove", function (event) {
-      daylightX = event.clientX;
-      daylightY = event.clientY;
-      heroSticky.classList.add("is-daylight-active");
-      if (!daylightRaf) daylightRaf = window.requestAnimationFrame(positionDaylightReveal);
-    });
-
-    heroSticky.addEventListener("pointerleave", function () {
-      heroSticky.classList.remove("is-daylight-active");
-    });
+    hero.style.setProperty("--landmark-scale", "1");
+    hero.style.setProperty("--landmark-x", "0%");
+    hero.style.setProperty("--landmark-y", "0%");
+    hero.style.setProperty("--landmark-copy-opacity", "1");
+    hero.style.setProperty("--landmark-copy-y", "0px");
+    hero.style.setProperty("--landmark-ui-opacity", "1");
   }
 
   /* ---------- reliable back-to-top controls ---------- */

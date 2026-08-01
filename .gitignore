@@ -1,6 +1,18 @@
 .DS_Store
 .claude/
 .vercel/
-qa-*.png
+qa-*.*
 design-qa.md
 assets-in/
+tmp/
+
+# Superseded image iterations and reconstruction concepts — kept locally,
+# not shipped. The optimised .jpg of each is what the site actually loads.
+img/concepts/
+img/ebene-landmarks-night-v2.png
+img/ebene-landmarks-night-v3.png
+img/ebene-landmarks-night-v4.png
+img/ebene-landmarks-night-v5.png
+img/ebene-landmarks-night-v6.png
+img/ebene-cinematic-night.jpg
+img/tours/alexander-house/01-aerial-v2.png

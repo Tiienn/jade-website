@@ -6,13 +6,60 @@
   <title>Jade Group — Property Development, Management &amp; Investment</title>
   <meta name="description" content="Jade Group has shaped the places where Mauritius works since 1976 — office towers, commercial centres, residences and land developments, built with care by a small, dedicated team.">
 
+  <!-- Canonical host. If the site is served from anywhere other than
+       www.jadegroup.mu, change it here and in the other pages' og:url,
+       plus sitemap.xml and robots.txt. -->
+  <link rel="canonical" href="https://www.jadegroup.mu/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Jade Group">
+  <meta property="og:locale" content="en_MU">
+  <meta property="og:url" content="https://www.jadegroup.mu/">
+  <meta property="og:title" content="Jade Group — Property Development, Management &amp; Investment">
+  <meta property="og:description" content="Shaping the places where Mauritius works since 1976 — office towers, commercial centres, residences and land developments across the island.">
+  <meta property="og:image" content="https://www.jadegroup.mu/img/og-cover.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Raffles Tower, Barclays House and Alexander House at night in Ebène Cybercity">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Jade Group — Property Development, Management &amp; Investment">
+  <meta name="twitter:description" content="Shaping the places where Mauritius works since 1976.">
+  <meta name="twitter:image" content="https://www.jadegroup.mu/img/og-cover.jpg">
+  <meta name="theme-color" content="#0c0c0b">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "RealEstateAgent",
+    "name": "Jade Group",
+    "url": "https://www.jadegroup.mu/",
+    "logo": "https://www.jadegroup.mu/img/brand/jade-group-dark.png",
+    "image": "https://www.jadegroup.mu/img/og-cover.jpg",
+    "description": "Property development, management and investment in Mauritius since 1976, specialising in office buildings.",
+    "foundingDate": "1976",
+    "founder": { "@type": "Person", "name": "Alex Fon Sing" },
+    "telephone": "+230 465 9800",
+    "faxNumber": "+230 454 3800",
+    "email": "info@jadegroup.mu",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Level 5, Alexander House, 35 Cybercity",
+      "addressLocality": "Ebène",
+      "addressCountry": "MU"
+    },
+    "geo": { "@type": "GeoCoordinates", "latitude": -20.242372, "longitude": 57.4929153 },
+    "areaServed": { "@type": "Country", "name": "Mauritius" }
+  }
+  </script>
+
   <script>document.documentElement.classList.add("js");</script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/style.css?v=20260727-1">
+  <link rel="stylesheet" href="css/style.css?v=20260731-5">
+  <link rel="stylesheet" href="css/ebene.css?v=20260730-6">
   <link rel="icon" href="img/favicon.svg?v=20260717-2" type="image/svg+xml">
 </head>
 <body id="top">
@@ -26,7 +73,7 @@
     <nav class="nav__links" aria-label="Main">
       <a href="#legacy">Legacy,</a>
       <a href="#projects">Projects,</a>
-      <a href="#people">People,</a>
+      <a href="#people">Team,</a>
       <a href="#contact">Contact</a>
     </nav>
   </header>
@@ -34,24 +81,36 @@
   <main>
 
     <!-- ============ HERO ============ -->
-    <section class="hero" aria-label="Introduction">
-      <div class="hero__sticky">
-        <figure class="hero__media">
-          <img class="hero__image hero__image--night" src="img/hero-ebene-night-clean.jpg" alt="Ebène Cybercity at night, home to several Jade Group developments" fetchpriority="high">
-          <img class="hero__image hero__image--day" src="img/hero-ebene-day-hover.jpg" alt="" aria-hidden="true" decoding="async">
+    <section class="hero landmark-map landmark-map--scroll" id="landmark-map" aria-label="Explore Jade landmarks in Ebène">
+      <div class="landmark-map__sticky">
+        <figure class="landmark-map__image">
+          <img src="img/ebene-landmarks-night-v6.jpg" alt="Night aerial of Ebène Cybercity showing Raffles Tower, Barclays House and Alexander House" fetchpriority="high" decoding="async">
         </figure>
-        <div class="hero__inner">
-          <h1 class="hero__title">
-            <span class="hero__line">Building</span>
-            <span class="hero__line hero__line--serif">quietly, well,</span>
-            <span class="hero__line">since 1976</span>
-          </h1>
+        <div class="landmark-map__shade" aria-hidden="true"></div>
+
+        <section class="landmark-copy" aria-live="polite">
+          <p class="landmark-copy__eyebrow">Three Jade landmarks</p>
+          <h1 class="landmark-copy__statement"><span>Building</span><em>quietly, well,</em><span>since 1976</span></h1>
+        </section>
+
+        <div class="map-pins" aria-label="Choose a Jade landmark">
+          <button class="map-pin" type="button" data-map-select="raffles-tower" style="--pin-x: 43%; --pin-y: 23%;" aria-label="Open the Raffles Tower tour">
+            <span class="map-pin__label">Raffles Tower</span><span class="map-pin__line" aria-hidden="true"></span><span class="map-pin__point" aria-hidden="true"></span>
+          </button>
+          <button class="map-pin" type="button" data-map-select="barclays-house" style="--pin-x: 77%; --pin-y: 29%;" aria-label="Open the Barclays House tour">
+            <span class="map-pin__label">Barclays House</span><span class="map-pin__line" aria-hidden="true"></span><span class="map-pin__point" aria-hidden="true"></span>
+          </button>
+          <button class="map-pin" type="button" data-map-select="alexander-house" style="--pin-x: 67%; --pin-y: 58%;" aria-label="Open the Alexander House tour">
+            <span class="map-pin__label">Alexander House</span><span class="map-pin__line" aria-hidden="true"></span><span class="map-pin__point" aria-hidden="true"></span>
+          </button>
         </div>
+
+        <p class="landmark-hint"><span class="landmark-hint__mouse" aria-hidden="true"></span> Select a landmark</p>
       </div>
     </section>
 
     <!-- ============ MOTTO ============ -->
-    <section class="motto" id="legacy">
+    <section class="capabilities" id="legacy" aria-label="Jade Group capabilities">
       <div class="motto__marquee reveal" aria-label="Property, development, investment, management and real estate">
         <div class="motto__marquee-track">
           <div class="motto__marquee-set">
@@ -68,8 +127,25 @@
             <span>Management</span><i>·</i>
             <span>Real Estate</span><i>·</i>
           </div>
+          <div class="motto__marquee-set" aria-hidden="true">
+            <span class="motto__property">Property</span><i>·</i>
+            <span>Development</span><i>·</i>
+            <span>Investment</span><i>·</i>
+            <span>Management</span><i>·</i>
+            <span>Real Estate</span><i>·</i>
+          </div>
+          <div class="motto__marquee-set" aria-hidden="true">
+            <span class="motto__property">Property</span><i>·</i>
+            <span>Development</span><i>·</i>
+            <span>Investment</span><i>·</i>
+            <span>Management</span><i>·</i>
+            <span>Real Estate</span><i>·</i>
+          </div>
         </div>
       </div>
+    </section>
+
+    <section class="motto">
       <h2 class="motto__title reveal">Small is<br>Beautiful</h2>
       <p class="motto__attr reveal">— E.F. Schumacher, 1973.</p>
       <div class="motto__cols">
@@ -263,7 +339,7 @@
           <p class="orbit__metric"><strong>50</strong><span class="serif">Years in<br>property</span></p>
           <p class="orbit__metric"><strong>30+</strong><span class="serif">Projects<br>delivered</span></p>
           <p class="orbit__metric"><strong>20+</strong><span class="serif">Office building<br>developments</span></p>
-          <p class="orbit__metric"><strong>4</strong><span class="serif">Sectors<br>of activity</span></p>
+          <p class="orbit__metric"><strong>4</strong><span class="serif">Property<br>segments</span></p>
         </div>
 
         <div class="orbit__progress" aria-hidden="true">
@@ -276,7 +352,7 @@
     <!-- ============ PEOPLE (dark) ============ -->
     <section class="people" id="people">
       <header class="people__head reveal">
-        <p class="eyebrow eyebrow--light">People</p>
+        <p class="eyebrow eyebrow--light">Team</p>
         <h2>A small team,<br><span class="serif people__serif">kept on purpose.</span></h2>
         <p class="people__intro serif">Over the years we have retained the values of a family business:
         shared purpose, a strong work ethic and a clear vision. We believe
@@ -381,6 +457,27 @@
 
   </main>
 
+  <section class="building-tour" id="building-tour" role="dialog" aria-label="Immersive building tour" hidden>
+    <div class="building-tour__stage" id="tour-stage">
+      <img class="building-tour__image" id="tour-image" src="" alt="">
+      <div class="building-tour__shade" aria-hidden="true"></div>
+    </div>
+
+    <header class="building-tour__heading">
+      <p id="tour-eyebrow">Jade landmark 01</p>
+      <h2 id="tour-title">Alexander House</h2>
+      <p class="building-tour__meta" id="tour-meta">Ebène Cybercity · G+4</p>
+      <a id="tour-project" href="project.html?p=alexander-house">View full project <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <div class="building-tour__position" aria-live="polite">
+      <span id="tour-current">01</span><i></i><span id="tour-total">04</span>
+    </div>
+    <nav class="building-tour__views" id="tour-views" aria-label="Choose a view of this building"></nav>
+    <p class="building-tour__hint">Drag or swipe to move around the building</p>
+    <button class="building-tour__close" id="close-tour" type="button" aria-label="Close building tour"><span aria-hidden="true">×</span></button>
+  </section>
+
   <!-- ============ FOOTER ============ -->
   <footer class="footer">
     <img class="footer__logo" src="img/brand/jade-group-white.png" alt="Jade Group">
@@ -391,6 +488,7 @@
   </footer>
 
   <script src="js/project-orbit.js?v=20260717-7"></script>
-  <script src="js/main.js?v=20260726-3"></script>
+  <script src="js/main.js?v=20260730-4"></script>
+  <script src="js/ebene.js?v=20260801-1"></script>
 </body>
 </html>
