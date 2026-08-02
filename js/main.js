@@ -7,7 +7,7 @@
 
   /* ---------- navigation contrast across light and dark sections ---------- */
   var nav = document.querySelector(".nav");
-  var darkSections = document.querySelectorAll(".hero, .legacy-visual, .orbit, .people, .contact, .footer");
+  var darkSections = document.querySelectorAll(".hero, .build, .orbit, .people, .contact, .footer");
   var navRaf = 0;
 
   function updateNavTheme() {
@@ -252,48 +252,4 @@
     positionDepthPhotos();
   }
 
-  /* ---------- Alexander House: blueprint-to-built scroll sequence ---------- */
-  var legacyVisual = document.querySelector(".legacy-visual");
-  var legacyVisualImages = legacyVisual
-    ? legacyVisual.querySelectorAll(".legacy-visual__image")
-    : [];
-
-  if (!reduceMotion && legacyVisual && legacyVisualImages.length) {
-    var legacyRaf = 0;
-
-    function positionLegacyVisual() {
-      legacyRaf = 0;
-      var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-      var rect = legacyVisual.getBoundingClientRect();
-      if (rect.bottom < 0 || rect.top > viewportHeight) return;
-
-      var travel = Math.max(1, rect.height - viewportHeight);
-      var progress = Math.max(0, Math.min(1, -rect.top / travel));
-      var photoProgress = Math.max(0, Math.min(1, (progress - 0.16) / 0.7));
-      var range = window.innerWidth <= 700 ? 26 : 42;
-      var shift = (progress - 0.5) * range;
-
-      legacyVisual.style.setProperty(
-        "--photo-clip",
-        (100 - photoProgress * 100).toFixed(2) + "%"
-      );
-      legacyVisual.style.setProperty(
-        "--drawing-line-left",
-        (photoProgress * 100).toFixed(2) + "%"
-      );
-      legacyVisual.style.setProperty(
-        "--drawing-line-opacity",
-        photoProgress > 0.01 && photoProgress < 0.995 ? "1" : "0"
-      );
-      legacyVisual.style.setProperty("--legacy-shift", shift.toFixed(2) + "px");
-    }
-
-    function requestLegacyPosition() {
-      if (!legacyRaf) legacyRaf = window.requestAnimationFrame(positionLegacyVisual);
-    }
-
-    window.addEventListener("scroll", requestLegacyPosition, { passive: true });
-    window.addEventListener("resize", requestLegacyPosition, { passive: true });
-    positionLegacyVisual();
-  }
 })();

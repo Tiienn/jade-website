@@ -58,7 +58,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/style.css?v=20260731-5">
+  <link rel="stylesheet" href="css/style.css?v=20260802-1">
   <link rel="stylesheet" href="css/ebene.css?v=20260730-6">
   <link rel="icon" href="img/favicon.svg?v=20260717-2" type="image/svg+xml">
 </head>
@@ -154,21 +154,36 @@
       </div>
     </section>
 
-    <!-- ============ ALEXANDER HOUSE ============ -->
-    <section class="legacy-visual" aria-label="Alexander House progressing from architectural blueprint to completed building">
-      <div class="legacy-visual__sticky">
-        <img
-          class="legacy-visual__image legacy-visual__blueprint"
-          src="img/legacy-alexander-house-blueprint-teal.png"
-          alt=""
-          aria-hidden="true"
-          loading="lazy">
-        <img
-          class="legacy-visual__image legacy-visual__photo"
-          src="img/legacy-alexander-house-day.jpg"
-          alt="Alexander House in daylight in Ebène Cybercity"
-          loading="lazy">
-        <div class="legacy-visual__drawing-line" aria-hidden="true"></div>
+    <!-- ============ ALEXANDER HOUSE — SCROLL-BUILT ============ -->
+    <section class="build" id="build" aria-labelledby="build-heading"
+             data-frames="50" data-path="img/sequence/alexander-house">
+      <div class="build__sticky">
+        <div class="build__stage">
+          <div class="build__frames" id="build-frames">
+            <!-- frames injected by js/build-sequence.js; the last one is
+                 rendered server-side below so there is always something to see -->
+            <noscript>
+              <img src="img/sequence/alexander-house/49.webp"
+                   alt="The structure of Alexander House, complete, seen from the front">
+            </noscript>
+          </div>
+        </div>
+
+        <div class="build__copy">
+          <p class="eyebrow build__eyebrow">Built to last</p>
+          <h2 id="build-heading" class="build__title">
+            Alexander&nbsp;House,<br><em>storey by storey</em>
+          </h2>
+          <p class="build__body">
+            One of the first buildings to rise in Ebène Cybercity. We developed
+            it and still manage it today. Come find us on Level&nbsp;5.
+          </p>
+        </div>
+
+        <div class="build__meter" aria-hidden="true">
+          <span class="build__level" id="build-level">Level 1</span>
+          <span class="build__track"><i id="build-fill"></i></span>
+        </div>
       </div>
     </section>
 
@@ -406,7 +421,7 @@
           </div>
           <div class="contact__block reveal">
             <h3>Call</h3>
-            <p><a href="tel:+2304659800">+230 465 9800</a><br>Fax +230 454 3800</p>
+            <p><a href="tel:4659800">465 9800</a><br>Fax +230 454 3800</p>
           </div>
           <div class="contact__block reveal">
             <h3>Write</h3>
@@ -488,6 +503,7 @@
   </footer>
 
   <script src="js/project-orbit.js?v=20260717-7"></script>
+  <script src="js/build-sequence.js?v=20260803-1"></script>
   <script src="js/main.js?v=20260730-4"></script>
   <script src="js/ebene.js?v=20260801-1"></script>
 </body>
