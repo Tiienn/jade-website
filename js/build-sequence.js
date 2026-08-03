@@ -21,13 +21,15 @@
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Five levels across the sequence, from the base to Jade Group's office.
+  // Begin with the preparatory construction stage, then rise floor by floor
+  // to Jade Group's office on Level 5.
   var LEVELS = [
-    [0.00, "Level 1"],
-    [0.14, "Level 2"],
-    [0.28, "Level 3"],
-    [0.42, "Level 4"],
-    [0.56, "Level 5"]
+    [0.00, "Under construction"],
+    [0.10, "Level 1"],
+    [0.25, "Level 2"],
+    [0.40, "Level 3"],
+    [0.55, "Level 4"],
+    [0.70, "Level 5"]
   ];
 
   var frames = [];
